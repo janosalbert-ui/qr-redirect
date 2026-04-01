@@ -57,6 +57,15 @@ const id = params.get("id");
 
 function showData(data){
 
+if(!data || data.error){
+
+document.getElementById("content").innerHTML =
+"Nincs találat a rekordra.";
+
+return;
+
+}
+
 let html = "";
 
 html += "<p><b>ID:</b> "+data.id+"</p>";
@@ -79,6 +88,11 @@ document.getElementById("content").innerHTML = html;
 if(id){
 
 const script = document.createElement("script");
+
+script.onerror = function(){
+document.getElementById("content").innerHTML =
+"Hiba a lekérdezésnél.";
+};
 
 script.src =
 SCRIPT_URL + "?id=" + id + "&callback=showData";
