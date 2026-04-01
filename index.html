@@ -7,7 +7,6 @@
 <title>Rekord</title>
 
 <style>
-
 body{
 font-family:Arial;
 background:#f5f5f5;
@@ -20,7 +19,6 @@ padding:20px;
 border-radius:10px;
 box-shadow:0 2px 8px rgba(0,0,0,0.2);
 }
-
 </style>
 
 </head>
@@ -36,10 +34,7 @@ Betöltés...
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-/* GOOGLE SHEET ID */
 const sheetID = "1KMk0MY4LVv3XQCWbBVsN_csA9lU6wouzRxcGbK6xUYg";
-
-/* SHEET NAME */
 const sheetName = "QRtábla";
 
 const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
