@@ -4,55 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-
-body{
-font-family:Arial;
-background:#f5f5f5;
-padding:20px;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 10px rgba(0,0,0,0.2);
-margin-bottom:20px;
-}
-
-h2{
-margin-top:0;
-}
-
-img{
-width:100%;
-max-width:500px;
-border-radius:8px;
-margin-top:10px;
-}
-
-button{
-width:100%;
-padding:18px;
-font-size:18px;
-border:none;
-border-radius:10px;
-background:#2f6edb;
-color:white;
-}
-
-</style>
-</head>
-
-<body>
-
-<div id="content"></div>
-
-<div class="card">
-<button onclick="takePhoto()">📷 Fotó készítése</button>
-<input type="file" id="camera" accept="image/*" capture="environment" style="display:none">
-</div>
-
 <script>
 
 const SCRIPT_URL =
@@ -61,63 +12,18 @@ const SCRIPT_URL =
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-if(!id){
-document.getElementById("content").innerHTML="Nincs ID.";
+if(id){
+window.location.replace(SCRIPT_URL + "?id=" + id);
 }
-
-loadData();
-
-function loadData(){
-
-fetch(SCRIPT_URL + "?id=" + id)
-.then(r => r.text())
-.then(html => {
-
-document.getElementById("content").innerHTML = html;
-
-});
-
+else{
+document.write("Nincs ID.");
 }
-
-function takePhoto(){
-document.getElementById("camera").click();
-}
-
-document.getElementById("camera").addEventListener("change", function(){
-
-const file = this.files[0];
-if(!file) return;
-
-const reader = new FileReader();
-
-reader.onload = function(e){
-
-const base64 = e.target.result.split(",")[1];
-
-fetch(SCRIPT_URL,{
-method:"POST",
-body:new URLSearchParams({
-id:id,
-image:base64
-})
-})
-.then(r=>r.text())
-.then(res=>{
-
-alert("Fotó feltöltve");
-
-location.reload();
-
-});
-
-};
-
-reader.readAsDataURL(file);
-
-});
 
 </script>
 
+</head>
+<body>
+Betöltés...
 </body>
 </html>
 </body>
