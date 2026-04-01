@@ -1,23 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<title>Furniture info</title>
+
 <style>
+
 body{
 font-family:Arial;
+padding:20px;
 background:#f5f5f5;
-padding:40px;
 }
 
 .card{
 background:white;
 padding:20px;
 border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.2);
 max-width:500px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+margin:auto;
 }
+
+img{
+width:100%;
+max-width:400px;
+margin-top:10px;
+border-radius:6px;
+}
+
 </style>
 
 </head>
@@ -25,8 +38,13 @@ box-shadow:0 0 10px rgba(0,0,0,0.1);
 <body>
 
 <div class="card">
+
 <h2>Furniture info</h2>
-<div id="content">Betöltés...</div>
+
+<div id="content">
+Betöltés...
+</div>
+
 </div>
 
 <script>
@@ -37,27 +55,41 @@ const SCRIPT_URL =
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-if(!id){
-document.getElementById("content").innerHTML="Nincs ID paraméter.";
+function showData(data){
+
+let html = "";
+
+html += "<p><b>ID:</b> "+data.id+"</p>";
+html += "<p><b>Date:</b> "+data.date+"</p>";
+html += "<p><b>Furniture:</b> "+data.furniture+"</p>";
+html += "<p><b>Component:</b> "+data.component+"</p>";
+html += "<p><b>Unit:</b> "+data.unit+"</p>";
+html += "<p><b>Quantity:</b> "+data.qty+"</p>";
+
+if(data.photo1) html += "<img src='"+data.photo1+"'>";
+if(data.photo2) html += "<img src='"+data.photo2+"'>";
+if(data.photo3) html += "<img src='"+data.photo3+"'>";
+if(data.photo4) html += "<img src='"+data.photo4+"'>";
+if(data.photo5) html += "<img src='"+data.photo5+"'>";
+
+document.getElementById("content").innerHTML = html;
+
+}
+
+if(id){
+
+const script = document.createElement("script");
+
+script.src =
+SCRIPT_URL + "?id=" + id + "&callback=showData";
+
+document.body.appendChild(script);
+
 }
 else{
 
-fetch(SCRIPT_URL + "?id=" + id)
-.then(response => response.json())
-.then(data => {
-
-document.getElementById("content").innerHTML = `
-<b>ID:</b> ${data.id}<br><br>
-<b>Furniture:</b> ${data.furniture}<br><br>
-<b>Component:</b> ${data.component}<br><br>
-<b>Unit:</b> ${data.unit}<br><br>
-<b>Quantity:</b> ${data.qty}
-`;
-
-})
-.catch(err=>{
-document.getElementById("content").innerHTML="Hiba a lekérdezésnél.";
-});
+document.getElementById("content").innerHTML =
+"Nincs ID paraméter.";
 
 }
 
