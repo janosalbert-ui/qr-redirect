@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Rekord</title>
+<title>Record</title>
 
 <style>
+
 body{
 font-family:Arial;
-background:#f5f5f5;
+background:#f2f2f2;
 padding:20px;
 }
 
@@ -18,15 +20,45 @@ background:white;
 padding:20px;
 border-radius:10px;
 box-shadow:0 2px 8px rgba(0,0,0,0.2);
+margin-bottom:20px;
 }
+
+img{
+width:100%;
+margin-top:10px;
+border-radius:10px;
+}
+
+button{
+padding:15px;
+font-size:18px;
+background:#007bff;
+color:white;
+border:none;
+border-radius:10px;
+width:100%;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="card" id="content">
-Betöltés...
+<div class="card" id="data">
+Loading...
+</div>
+
+<div class="card">
+
+<button onclick="takePhoto()">📷 Fotó készítése</button>
+
+<input type="file"
+id="camera"
+accept="image/*"
+capture="environment"
+style="display:none">
+
 </div>
 
 <script>
@@ -34,32 +66,109 @@ Betöltés...
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-const sheetID = "1KMk0MY4LVv3XQCWbBVsN_csA9lU6wouzRxcGbK6xUYg";
-const sheetName = "QRtábla";
+const sheetID =
+"1KMk0MY4LVv3XQCWbBVsN_csA9lU6wouzRxcGbK6xUYg";
 
-const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+const sheetName =
+"QR táblázat_v02";
 
-fetch(url)
-.then(res => res.json())
-.then(data => {
+const uploadURL =
+"https://script.google.com/macros/s/AKfycbzSx_VZKQeXhoKngKZ_ot46mrzvtvUF8BPK1TdISdVXAZskZwDm0dr84W81b4HeoIjb/exec";
 
-const record = data.find(r => r.ID === id);
+const api =
+`https://opensheet.elk.sh/${sheetID}/${sheetName}`;
 
-if(!record){
-document.getElementById("content").innerHTML = "Nincs találat";
+loadData();
+
+function loadData(){
+
+fetch(api)
+.then(r=>r.json())
+.then(data=>{
+
+const rec =
+data.find(r=>r.ID===id);
+
+if(!rec){
+document.getElementById("data").innerHTML=
+"Record not found";
 return;
 }
 
-document.getElementById("content").innerHTML = `
-<h2>Rekord adatai</h2>
-<p><b>ID:</b> ${record.ID}</p>
-<p><b>Megnevezés:</b> ${record.Megnevezés}</p>
-<p><b>Mennyiség:</b> ${record.menny}</p>
-<p><b>Egység:</b> ${record["menny. egys"]}</p>
-<p><b>Egységár:</b> ${record["egys. ár"]}</p>
+let html =
+
+`<h2>${rec["Bútor neve"]}</h2>
+
+<p><b>ID:</b> ${rec.ID}</p>
+<p><b>Component:</b> ${rec.Component}</p>
+<p><b>Quantity:</b> ${rec.Quantity} ${rec.Unit}</p>
 `;
 
+for(let i=1;i<=5;i++){
+
+const photo = rec["Photo_"+i];
+
+if(photo){
+
+html +=
+`<img src="${photo}">`;
+
+}
+
+}
+
+document.getElementById("data").innerHTML = html;
+
 });
+
+}
+
+function takePhoto(){
+
+document.getElementById("camera").click();
+
+}
+
+document
+.getElementById("camera")
+.addEventListener("change",function(e){
+
+const file = e.target.files[0];
+
+const reader = new FileReader();
+
+reader.onload = function(){
+
+const base64 =
+reader.result.split(",")[1];
+
+upload(base64);
+
+};
+
+reader.readAsDataURL(file);
+
+});
+
+function upload(image){
+
+fetch(uploadURL,{
+method:"POST",
+body:new URLSearchParams({
+id:id,
+image:image
+})
+})
+.then(r=>r.text())
+.then(res=>{
+
+alert("Fotó feltöltve");
+
+loadData();
+
+});
+
+}
 
 </script>
 
