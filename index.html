@@ -84,7 +84,6 @@ const SCRIPT_URL =
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-
 /* ===== Drive link javítás ===== */
 
 function convertDriveLink(url){
@@ -93,22 +92,21 @@ if(!url) return "";
 
 let fileId = "";
 
-/* format: open?id= */
+/* open?id= */
 let m1 = url.match(/id=([^&]+)/);
 if(m1) fileId = m1[1];
 
-/* format: file/d/ */
+/* file/d/ */
 let m2 = url.match(/\/d\/([^\/]+)/);
 if(!fileId && m2) fileId = m2[1];
 
 if(fileId){
-return "https://drive.google.com/uc?export=view&id="+fileId;
+return "https://drive.google.com/uc?id=" + fileId;
 }
 
 return "";
 
 }
-
 
 /* ===== nagy kép ===== */
 
@@ -124,7 +122,6 @@ function closeLightbox(){
 document.getElementById("lightbox").style.display="none";
 
 }
-
 
 /* ===== adat betöltés ===== */
 
