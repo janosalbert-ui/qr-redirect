@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta charset="utf-8">
@@ -20,23 +21,39 @@ background:white;
 padding:20px;
 border-radius:10px;
 box-shadow:0 2px 8px rgba(0,0,0,0.2);
-max-width:500px;
+max-width:600px;
 margin:auto;
 }
 
 .gallery{
-margin-top:20px;
-display:flex;
-overflow-x:auto;
+display:grid;
+grid-template-columns:repeat(2,1fr);
 gap:10px;
-scroll-snap-type:x mandatory;
+margin-top:20px;
 }
 
 .gallery img{
 width:100%;
-max-width:400px;
 border-radius:6px;
-scroll-snap-align:center;
+cursor:pointer;
+}
+
+.lightbox{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+.lightbox img{
+max-width:90%;
+max-height:90%;
+border-radius:8px;
 }
 
 </style>
@@ -55,6 +72,10 @@ Betöltés...
 
 </div>
 
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+<img id="lightboxImg">
+</div>
+
 <script>
 
 const SCRIPT_URL =
@@ -63,76 +84,90 @@ const SCRIPT_URL =
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-function formatDate(dateString){
+function convertDriveLink(url){
 
-if(!dateString) return "";
+if(!url) return "";
 
-const d = new Date(dateString);
+let match = url.match(/[-\w]{25,}/);
 
-return d.getFullYear() + "." +
-String(d.getMonth()+1).padStart(2,'0') + "." +
-String(d.getDate()).padStart(2,'0');
+if(match){
+return "https://drive.google.com/uc?export=view&id=" + match[0];
+}
+
+return url;
+
+}
+
+function openLightbox(src){
+
+document.getElementById("lightboxImg").src = src;
+document.getElementById("lightbox").style.display="flex";
+
+}
+
+function closeLightbox(){
+
+document.getElementById("lightbox").style.display="none";
 
 }
 
 async function loadData(){
 
 if(!id){
-document.getElementById("content").innerHTML =
-"Hiányzik a Package ID.";
+document.getElementById("content").innerHTML="Nincs ID paraméter.";
 return;
 }
 
 try{
 
-const response = await fetch(SCRIPT_URL + "?id=" + encodeURIComponent(id));
+const response = await fetch(SCRIPT_URL+"?id="+id);
 const data = await response.json();
 
-if(!data || data.error){
-document.getElementById("content").innerHTML =
-"Nincs találat a rekordra.";
+if(data.error){
+document.getElementById("content").innerHTML="Nincs adat a rekordra.";
 return;
 }
 
-let html = "";
+let html="";
 
-html += "<p><b>Master Package ID:</b> " + (data.master_package_id || "-") + "</p>";
-html += "<p><b>Package ID:</b> " + data.id + "</p>";
-html += "<p><b>Date:</b> " + formatDate(data.date) + "</p>";
-html += "<p><b>Furniture:</b> " + data.furniture + "</p>";
-html += "<p><b>Component:</b> " + data.component + "</p>";
-html += "<p><b>Unit:</b> " + data.unit + "</p>";
-html += "<p><b>Quantity:</b> " + data.qty + "</p>";
+html+="<p><b>Master Package ID:</b> "+(data.master_package_id||"-")+"</p>";
+html+="<p><b>Package ID:</b> "+data.id+"</p>";
+html+="<p><b>Date:</b> "+data.date+"</p>";
+html+="<p><b>Furniture:</b> "+data.furniture+"</p>";
+html+="<p><b>Component:</b> "+data.component+"</p>";
+html+="<p><b>Unit:</b> "+data.unit+"</p>";
+html+="<p><b>Quantity:</b> "+data.qty+"</p>";
 
-/* GALÉRIA */
+let photos=[
+data.photo1,
+data.photo2,
+data.photo3,
+data.photo4,
+data.photo5
+];
 
-let photos = [];
+let gallery="";
 
-if(data.photo1) photos.push(data.photo1);
-if(data.photo2) photos.push(data.photo2);
-if(data.photo3) photos.push(data.photo3);
-if(data.photo4) photos.push(data.photo4);
-if(data.photo5) photos.push(data.photo5);
+photos.forEach(p=>{
 
-if(photos.length > 0){
+let img=convertDriveLink(p);
 
-html += "<div class='gallery'>";
+if(img){
+gallery+=`<img src="${img}" onclick="openLightbox('${img}')">`;
+}
 
-photos.forEach(function(p){
-html += "<img src='"+p+"'>";
 });
 
-html += "</div>";
-
+if(gallery){
+html+="<div class='gallery'>"+gallery+"</div>";
 }
 
-document.getElementById("content").innerHTML = html;
+document.getElementById("content").innerHTML=html;
 
 }
-catch(err){
+catch(e){
 
-document.getElementById("content").innerHTML =
-"Hiba a lekérdezésnél.";
+document.getElementById("content").innerHTML="Hiba a lekérdezésnél.";
 
 }
 
