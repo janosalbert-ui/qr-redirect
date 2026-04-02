@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Furniture info</title>
+<title>Package info</title>
 
 <style>
 
@@ -39,7 +39,7 @@ border-radius:6px;
 
 <div class="card">
 
-<h2>Furniture info</h2>
+<h2>Package info</h2>
 
 <div id="content">
 Betöltés...
@@ -50,7 +50,7 @@ Betöltés...
 <script>
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+"https://script.google.com/macros/s/AKfycby1fNZ5dc3UVb8rvjUIXcB920HrTzEcZR7hp7L7EjBB1LSbpwMkdu3W6LrYoJiNRvzk/exec";
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
@@ -58,7 +58,7 @@ const id = params.get("id");
 async function loadData(){
 
 if(!id){
-document.getElementById("content").innerHTML = "Nincs ID paraméter.";
+document.getElementById("content").innerHTML = "Nincs Package ID paraméter.";
 return;
 }
 
@@ -74,8 +74,8 @@ return;
 
 let html = "";
 
-html += "<p><b>ID:</b> "+data.id+"</p>";
-html += "<p><b>Master Package:</b> "+data.master_package_id+"</p>";
+html += "<p><b>Master Package ID:</b> "+(data.master_package_id || "")+"</p>";
+html += "<p><b>Package ID:</b> "+data.id+"</p>";
 html += "<p><b>Date:</b> "+data.date+"</p>";
 html += "<p><b>Furniture:</b> "+data.furniture+"</p>";
 html += "<p><b>Component:</b> "+data.component+"</p>";
