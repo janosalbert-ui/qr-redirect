@@ -24,11 +24,19 @@ max-width:500px;
 margin:auto;
 }
 
-img{
+.gallery{
+margin-top:20px;
+display:flex;
+overflow-x:auto;
+gap:10px;
+scroll-snap-type:x mandatory;
+}
+
+.gallery img{
 width:100%;
 max-width:400px;
-margin-top:10px;
 border-radius:6px;
+scroll-snap-align:center;
 }
 
 </style>
@@ -96,11 +104,27 @@ html += "<p><b>Component:</b> " + data.component + "</p>";
 html += "<p><b>Unit:</b> " + data.unit + "</p>";
 html += "<p><b>Quantity:</b> " + data.qty + "</p>";
 
-if(data.photo1) html += "<img src='"+data.photo1+"'>";
-if(data.photo2) html += "<img src='"+data.photo2+"'>";
-if(data.photo3) html += "<img src='"+data.photo3+"'>";
-if(data.photo4) html += "<img src='"+data.photo4+"'>";
-if(data.photo5) html += "<img src='"+data.photo5+"'>";
+/* GALÉRIA */
+
+let photos = [];
+
+if(data.photo1) photos.push(data.photo1);
+if(data.photo2) photos.push(data.photo2);
+if(data.photo3) photos.push(data.photo3);
+if(data.photo4) photos.push(data.photo4);
+if(data.photo5) photos.push(data.photo5);
+
+if(photos.length > 0){
+
+html += "<div class='gallery'>";
+
+photos.forEach(function(p){
+html += "<img src='"+p+"'>";
+});
+
+html += "</div>";
+
+}
 
 document.getElementById("content").innerHTML = html;
 
