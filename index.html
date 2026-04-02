@@ -58,29 +58,31 @@ const id = params.get("id");
 async function loadData(){
 
 if(!id){
-document.getElementById("content").innerHTML = "Nincs Package ID paraméter.";
+document.getElementById("content").innerHTML =
+"Hiányzik a Package ID.";
 return;
 }
 
 try{
 
-const response = await fetch(SCRIPT_URL + "?id=" + id);
+const response = await fetch(SCRIPT_URL + "?id=" + encodeURIComponent(id));
 const data = await response.json();
 
-if(!data || data.error){
-document.getElementById("content").innerHTML = "Nincs találat a rekordra.";
+if(data.error){
+document.getElementById("content").innerHTML =
+"Nincs találat a rekordra.";
 return;
 }
 
 let html = "";
 
-html += "<p><b>Master Package ID:</b> "+(data.master_package_id || "")+"</p>";
-html += "<p><b>Package ID:</b> "+data.id+"</p>";
-html += "<p><b>Date:</b> "+data.date+"</p>";
-html += "<p><b>Furniture:</b> "+data.furniture+"</p>";
-html += "<p><b>Component:</b> "+data.component+"</p>";
-html += "<p><b>Unit:</b> "+data.unit+"</p>";
-html += "<p><b>Quantity:</b> "+data.qty+"</p>";
+html += "<p><b>Master Package ID:</b> " + (data.master_package_id || "-") + "</p>";
+html += "<p><b>Package ID:</b> " + data.id + "</p>";
+html += "<p><b>Date:</b> " + data.date + "</p>";
+html += "<p><b>Furniture:</b> " + data.furniture + "</p>";
+html += "<p><b>Component:</b> " + data.component + "</p>";
+html += "<p><b>Unit:</b> " + data.unit + "</p>";
+html += "<p><b>Quantity:</b> " + data.qty + "</p>";
 
 if(data.photo1) html += "<img src='"+data.photo1+"'>";
 if(data.photo2) html += "<img src='"+data.photo2+"'>";
@@ -91,9 +93,10 @@ if(data.photo5) html += "<img src='"+data.photo5+"'>";
 document.getElementById("content").innerHTML = html;
 
 }
-catch(e){
+catch(err){
 
-document.getElementById("content").innerHTML = "Hiba a lekérdezésnél.";
+document.getElementById("content").innerHTML =
+"Hiba a lekérdezésnél.";
 
 }
 
