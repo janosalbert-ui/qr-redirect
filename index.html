@@ -50,10 +50,22 @@ Betöltés...
 <script>
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+"https://script.google.com/macros/s/AKfycby1fNZ5dc3UVb8rvjUIXcB920HrTzEcZR7hp7L7EjBB1LSbpwMkdu3W6LrYoJiNRvzk/exec";
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
+
+function formatDate(dateString){
+
+if(!dateString) return "";
+
+const d = new Date(dateString);
+
+return d.getFullYear() + "." +
+String(d.getMonth()+1).padStart(2,'0') + "." +
+String(d.getDate()).padStart(2,'0');
+
+}
 
 async function loadData(){
 
@@ -68,7 +80,7 @@ try{
 const response = await fetch(SCRIPT_URL + "?id=" + encodeURIComponent(id));
 const data = await response.json();
 
-if(data.error){
+if(!data || data.error){
 document.getElementById("content").innerHTML =
 "Nincs találat a rekordra.";
 return;
@@ -78,7 +90,7 @@ let html = "";
 
 html += "<p><b>Master Package ID:</b> " + (data.master_package_id || "-") + "</p>";
 html += "<p><b>Package ID:</b> " + data.id + "</p>";
-html += "<p><b>Date:</b> " + data.date + "</p>";
+html += "<p><b>Date:</b> " + formatDate(data.date) + "</p>";
 html += "<p><b>Furniture:</b> " + data.furniture + "</p>";
 html += "<p><b>Component:</b> " + data.component + "</p>";
 html += "<p><b>Unit:</b> " + data.unit + "</p>";
