@@ -17,8 +17,6 @@ color:#e6edf3;
 margin:0;
 }
 
-/* HEADER */
-
 .header{
 background:#161b22;
 padding:14px 20px;
@@ -27,15 +25,11 @@ font-weight:600;
 border-bottom:1px solid #30363d;
 }
 
-/* CONTAINER */
-
 .container{
 max-width:900px;
 margin:auto;
 padding:20px;
 }
-
-/* CARD */
 
 .card{
 background:#161b22;
@@ -60,8 +54,6 @@ font-size:16px;
 font-weight:500;
 word-break:break-word;
 }
-
-/* DESKTOP GRID */
 
 @media(min-width:700px){
 
@@ -100,16 +92,36 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.95);
+background:rgba(0,0,0,0.96);
 display:none;
+flex-direction:column;
 align-items:center;
 justify-content:center;
 }
 
 .lightbox img{
 max-width:95%;
-max-height:95%;
+max-height:80%;
 border-radius:8px;
+}
+
+/* DOTS */
+
+.dots{
+margin-top:15px;
+display:flex;
+gap:8px;
+}
+
+.dot{
+width:10px;
+height:10px;
+border-radius:50%;
+background:#444;
+}
+
+.dot.active{
+background:white;
 }
 
 </style>
@@ -135,7 +147,11 @@ Loading...
 </div>
 
 <div class="lightbox" id="lightbox">
+
 <img id="lightboxImg">
+
+<div class="dots" id="dots"></div>
+
 </div>
 
 <script>
@@ -169,22 +185,45 @@ return "";
 
 }
 
+/* LIGHTBOX OPEN */
+
 function openLightbox(index){
 
 currentIndex=index;
 
-document.getElementById("lightboxImg").src=images[index];
 document.getElementById("lightbox").style.display="flex";
 
+showImage();
+
 }
 
-function closeLightbox(){
+/* SHOW IMAGE */
 
+function showImage(){
+
+document.getElementById("lightboxImg").src=images[currentIndex];
+
+let dotsHTML="";
+
+images.forEach((img,i)=>{
+
+dotsHTML+=`<div class="dot ${i===currentIndex?'active':''}"></div>`;
+
+});
+
+document.getElementById("dots").innerHTML=dotsHTML;
+
+}
+
+/* CLOSE */
+
+document.getElementById("lightbox").addEventListener("click",e=>{
+
+if(e.target.id==="lightbox"){
 document.getElementById("lightbox").style.display="none";
-
 }
 
-document.getElementById("lightbox").addEventListener("click",closeLightbox);
+});
 
 /* SWIPE */
 
@@ -214,7 +253,7 @@ currentIndex++;
 
 if(currentIndex>=images.length) currentIndex=0;
 
-document.getElementById("lightboxImg").src=images[currentIndex];
+showImage();
 
 }
 
@@ -224,9 +263,11 @@ currentIndex--;
 
 if(currentIndex<0) currentIndex=images.length-1;
 
-document.getElementById("lightboxImg").src=images[currentIndex];
+showImage();
 
 }
+
+/* LOAD DATA */
 
 async function loadData(){
 
