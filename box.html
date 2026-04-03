@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Master Box</title>
+
+<style>
+
+body{
+font-family:system-ui;
+background:#0d1117;
+color:white;
+margin:0;
+padding:20px;
+}
+
+.header{
+font-size:22px;
+margin-bottom:20px;
+}
+
+.card{
+background:#161b22;
+border-radius:10px;
+padding:15px;
+}
+
+.item{
+padding:12px;
+border-bottom:1px solid #30363d;
+cursor:pointer;
+}
+
+.item:hover{
+background:#1f2630;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header" id="title">
+Loading...
+</div>
+
+<div class="card" id="list">
+
+Loading...
+
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
+const params=new URLSearchParams(window.location.search);
+const master=params.get("id");
+
+async function load(){
+
+let r=await fetch(API+"?master="+master);
+let data=await r.json();
+
+document.getElementById("title").innerText="MASTER "+data.master;
+
+let html="";
+
+data.packages.forEach(p=>{
+
+html+=`
+<div class="item" onclick="openPackage('${p.id}')">
+
+<b>${p.id}</b><br>
+${p.furniture} / ${p.component} (${p.qty})
+
+</div>
+`;
+
+});
+
+document.getElementById("list").innerHTML=html;
+
+}
+
+function openPackage(id){
+
+window.location.href="index.html?id="+id;
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>
