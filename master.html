@@ -16,25 +16,32 @@ background:#0d1117;
 color:white;
 margin:0;
 padding:30px;
-text-align:center;
+display:flex;
+justify-content:center;
 }
 
 .card{
 background:#161b22;
-border-radius:10px;
+border-radius:12px;
 padding:25px;
+width:100%;
 max-width:420px;
-margin:auto;
+text-align:center;
+}
+
+h2{
+margin-top:0;
 }
 
 input{
 width:100%;
-padding:12px;
+padding:14px;
 font-size:18px;
-border-radius:6px;
+border-radius:8px;
 border:none;
 margin-top:15px;
 text-align:center;
+box-sizing:border-box;
 }
 
 button{
@@ -43,7 +50,7 @@ padding:14px;
 margin-top:15px;
 font-size:16px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 cursor:pointer;
 }
 
@@ -61,6 +68,7 @@ color:white;
 margin-top:20px;
 font-size:14px;
 color:#8b949e;
+word-break:break-word;
 }
 
 </style>
@@ -79,51 +87,84 @@ color:#8b949e;
 
 <button class="close" onclick="closeMaster()">CLOSE MASTER</button>
 
-<div class="status" id="status"></div>
+<div class="status" id="status">Ready</div>
 
 </div>
 
 <script>
 
-const API = "https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
 
+function setStatus(txt){
+document.getElementById("status").innerText=txt;
+}
 
 async function openMaster(){
 
-let master = document.getElementById("master").value.trim();
+let master=document.getElementById("master").value.trim();
 
 if(!master){
 alert("Adj meg Master ID-t");
 return;
 }
 
-let form = new FormData();
+setStatus("Opening master...");
+
+try{
+
+let form=new FormData();
 form.append("action","open");
 form.append("master",master);
 
-let r = await fetch(API,{method:"POST",body:form});
-let data = await r.json();
+let r=await fetch(API,{
+method:"POST",
+body:form
+});
 
-document.getElementById("status").innerText =
-JSON.stringify(data,null,2);
+let data=await r.json();
+
+setStatus(JSON.stringify(data,null,2));
+
+}
+catch(err){
+
+setStatus("ERROR: "+err);
+
+}
 
 }
 
 
 async function closeMaster(){
 
-let form = new FormData();
+setStatus("Closing master...");
+
+try{
+
+let form=new FormData();
 form.append("action","close");
 
-let r = await fetch(API,{method:"POST",body:form});
-let data = await r.json();
+let r=await fetch(API,{
+method:"POST",
+body:form
+});
 
-document.getElementById("status").innerText =
-JSON.stringify(data,null,2);
+let data=await r.json();
+
+setStatus(JSON.stringify(data,null,2));
+
+}
+catch(err){
+
+setStatus("ERROR: "+err);
+
+}
 
 }
 
 </script>
 
+</body>
+</html>
 </body>
 </html>
