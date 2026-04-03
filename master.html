@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Master Manager</title>
+
+<style>
+
+body{
+font-family:system-ui;
+background:#0d1117;
+color:white;
+margin:0;
+padding:30px;
+text-align:center;
+}
+
+.card{
+background:#161b22;
+border-radius:10px;
+padding:25px;
+max-width:420px;
+margin:auto;
+}
+
+input{
+width:100%;
+padding:12px;
+font-size:18px;
+border-radius:6px;
+border:none;
+margin-top:15px;
+text-align:center;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:15px;
+font-size:16px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.open{
+background:#2ea043;
+color:white;
+}
+
+.close{
+background:#da3633;
+color:white;
+}
+
+.status{
+margin-top:20px;
+font-size:14px;
+color:#8b949e;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Master Manager</h2>
+
+<input id="master" placeholder="Master ID (pl. 401 vagy CAB1)">
+
+<button class="open" onclick="openMaster()">OPEN MASTER</button>
+
+<button class="close" onclick="closeMaster()">CLOSE MASTER</button>
+
+<div class="status" id="status"></div>
+
+</div>
+
+<script>
+
+const API = "https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
+
+async function openMaster(){
+
+let master = document.getElementById("master").value.trim();
+
+if(!master){
+alert("Adj meg Master ID-t");
+return;
+}
+
+let form = new FormData();
+form.append("action","open");
+form.append("master",master);
+
+let r = await fetch(API,{method:"POST",body:form});
+let data = await r.json();
+
+document.getElementById("status").innerText =
+JSON.stringify(data,null,2);
+
+}
+
+
+async function closeMaster(){
+
+let form = new FormData();
+form.append("action","close");
+
+let r = await fetch(API,{method:"POST",body:form});
+let data = await r.json();
+
+document.getElementById("status").innerText =
+JSON.stringify(data,null,2);
+
+}
+
+</script>
+
+</body>
+</html>
