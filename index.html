@@ -92,7 +92,7 @@ if(!url) return "";
 
 let fileId = "";
 
-/* open?id= */
+/* id= */
 let m1 = url.match(/id=([^&]+)/);
 if(m1) fileId = m1[1];
 
@@ -101,7 +101,7 @@ let m2 = url.match(/\/d\/([^\/]+)/);
 if(!fileId && m2) fileId = m2[1];
 
 if(fileId){
-return "https://drive.google.com/uc?id=" + fileId;
+return "https://lh3.googleusercontent.com/d/" + fileId;
 }
 
 return "";
