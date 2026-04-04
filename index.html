@@ -6,12 +6,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Package info</title>
+<title>Package Viewer</title>
 
 <style>
 
 body{
-font-family:system-ui;
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 background:#0d1117;
 color:#e6edf3;
 margin:0;
@@ -39,6 +39,8 @@ border-radius:10px;
 padding:20px;
 }
 
+/* INFO */
+
 .infoRow{
 margin-bottom:14px;
 }
@@ -54,6 +56,22 @@ font-weight:500;
 word-break:break-word;
 }
 
+@media(min-width:700px){
+
+.info{
+display:grid;
+grid-template-columns:200px 1fr;
+row-gap:10px;
+}
+
+.infoRow{
+display:contents;
+}
+
+}
+
+/* GALLERY */
+
 .gallery{
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
@@ -65,6 +83,44 @@ margin-top:20px;
 width:100%;
 border-radius:8px;
 cursor:pointer;
+}
+
+/* LIGHTBOX */
+
+.lightbox{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.96);
+display:none;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+.lightbox img{
+max-width:95%;
+max-height:80%;
+border-radius:8px;
+}
+
+.dots{
+margin-top:15px;
+display:flex;
+gap:8px;
+}
+
+.dot{
+width:10px;
+height:10px;
+border-radius:50%;
+background:#444;
+}
+
+.dot.active{
+background:white;
 }
 
 </style>
@@ -89,29 +145,158 @@ Loading...
 
 </div>
 
+<div class="lightbox" id="lightbox">
+
+<img id="lightboxImg">
+
+<div class="dots" id="dots"></div>
+
+</div>
+
 <script>
 
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
 
-const params=new URLSearchParams(window.location.search);
-const id=params.get("id");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+let images=[];
+let currentIndex=0;
+
+function convertDriveLink(url){
+
+if(!url) return "";
+
+let fileId="";
+
+let m1=url.match(/id=([^&]+)/);
+if(m1) fileId=m1[1];
+
+let m2=url.match(/\/d\/([^\/]+)/);
+if(!fileId && m2) fileId=m2[1];
+
+if(fileId){
+return "https://lh3.googleusercontent.com/d/"+fileId;
+}
+
+return "";
+
+}
+
+/* LIGHTBOX */
+
+function openLightbox(index){
+
+currentIndex=index;
+
+document.getElementById("lightbox").style.display="flex";
+
+showImage();
+
+}
+
+function showImage(){
+
+document.getElementById("lightboxImg").src=images[currentIndex];
+
+let dotsHTML="";
+
+images.forEach((img,i)=>{
+
+dotsHTML+=`<div class="dot ${i===currentIndex?'active':''}"></div>`;
+
+});
+
+document.getElementById("dots").innerHTML=dotsHTML;
+
+}
+
+document.getElementById("lightbox").addEventListener("click",e=>{
+
+if(e.target.id==="lightbox"){
+document.getElementById("lightbox").style.display="none";
+}
+
+});
+
+/* SWIPE */
+
+let startX=0;
+
+document.getElementById("lightbox").addEventListener("touchstart",e=>{
+startX=e.touches[0].clientX;
+});
+
+document.getElementById("lightbox").addEventListener("touchend",e=>{
+
+let endX=e.changedTouches[0].clientX;
+
+if(endX-startX>50){
+prevImage();
+}
+
+if(startX-endX>50){
+nextImage();
+}
+
+});
+
+function nextImage(){
+
+currentIndex++;
+
+if(currentIndex>=images.length) currentIndex=0;
+
+showImage();
+
+}
+
+function prevImage(){
+
+currentIndex--;
+
+if(currentIndex<0) currentIndex=images.length-1;
+
+showImage();
+
+}
+
+/* LOAD DATA */
 
 async function loadData(){
+
+if(!id){
+document.getElementById("content").innerHTML="Missing ID";
+return;
+}
 
 const response=await fetch(SCRIPT_URL+"?id="+id);
 const data=await response.json();
 
+if(data.error){
+document.getElementById("content").innerHTML="Package not found";
+return;
+}
+
 let html="";
 
 html+=`
+<div class="info">
+
 <div class="infoRow">
-<div class="label">Master</div>
-<div class="value">${data.master_package_id}</div>
+<div class="label">Master Package</div>
+<div class="value">${data.master_package_id||"-"}</div>
 </div>
 
 <div class="infoRow">
 <div class="label">Package ID</div>
 <div class="value">${data.id}</div>
+</div>
+
+<div class="infoRow">
+<div class="label">Date</div>
+<div class="value">${data.date}</div>
 </div>
 
 <div class="infoRow">
@@ -125,10 +310,45 @@ html+=`
 </div>
 
 <div class="infoRow">
+<div class="label">Unit</div>
+<div class="value">${data.unit}</div>
+</div>
+
+<div class="infoRow">
 <div class="label">Quantity</div>
 <div class="value">${data.qty}</div>
 </div>
+
+</div>
 `;
+
+let photos=[
+data.photo1,
+data.photo2,
+data.photo3,
+data.photo4,
+data.photo5
+];
+
+let gallery="";
+
+photos.forEach(p=>{
+
+let img=convertDriveLink(p);
+
+if(img){
+
+images.push(img);
+
+gallery+=`<img src="${img}" onclick="openLightbox(${images.length-1})">`;
+
+}
+
+});
+
+if(gallery){
+html+=`<div class="gallery">${gallery}</div>`;
+}
 
 document.getElementById("content").innerHTML=html;
 
