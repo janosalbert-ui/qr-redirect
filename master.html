@@ -11,17 +11,55 @@
 <style>
 
 body{
-font-family:system-ui;
+font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 background:#0d1117;
-color:white;
+color:#e6edf3;
 margin:0;
-padding:30px;
+}
+
+/* HEADER */
+
+.header{
+background:#161b22;
+border-bottom:1px solid #30363d;
+padding:14px 20px;
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.logo{
+height:32px;
+}
+
+.brand{
+display:flex;
+flex-direction:column;
+}
+
+.brandTitle{
+font-weight:600;
+font-size:15px;
+}
+
+.brandSub{
+font-size:12px;
+color:#8b949e;
+}
+
+/* LAYOUT */
+
+.container{
+max-width:900px;
+margin:auto;
+padding:30px 20px;
 display:flex;
 justify-content:center;
 }
 
 .card{
 background:#161b22;
+border:1px solid #30363d;
 border-radius:12px;
 padding:25px;
 width:100%;
@@ -29,9 +67,7 @@ max-width:420px;
 text-align:center;
 }
 
-h2{
-margin-top:0;
-}
+/* STATUS */
 
 .statusBox{
 margin-bottom:20px;
@@ -46,6 +82,8 @@ color:#58a6ff;
 font-weight:bold;
 }
 
+/* INPUT */
+
 input{
 width:100%;
 padding:14px;
@@ -55,7 +93,12 @@ border:none;
 margin-top:15px;
 text-align:center;
 box-sizing:border-box;
+background:#0d1117;
+color:white;
+border:1px solid #30363d;
 }
+
+/* BUTTONS */
 
 button{
 width:100%;
@@ -63,7 +106,7 @@ padding:14px;
 margin-top:15px;
 font-size:16px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
 }
 
@@ -77,11 +120,14 @@ background:#da3633;
 color:white;
 }
 
+/* LOG */
+
 .log{
 margin-top:15px;
 font-size:13px;
 color:#8b949e;
 word-break:break-word;
+text-align:left;
 }
 
 </style>
@@ -90,9 +136,22 @@ word-break:break-word;
 
 <body>
 
+<div class="header">
+
+<img src="logo.png" class="logo">
+
+<div class="brand">
+<div class="brandTitle">Inser Home</div>
+<div class="brandSub">Packing System</div>
+</div>
+
+</div>
+
+<div class="container">
+
 <div class="card">
 
-<h2>Master Manager</h2>
+<h2>📦 Master Manager</h2>
 
 <div class="statusBox">
 ACTIVE MASTER:<br>
@@ -106,6 +165,8 @@ ACTIVE MASTER:<br>
 <button class="close" onclick="closeMaster()">CLOSE MASTER</button>
 
 <div id="log" class="log"></div>
+
+</div>
 
 </div>
 
