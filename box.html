@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Master Box</title>
+<title>Master Package</title>
 
 <style>
 
@@ -45,6 +45,12 @@ cursor:pointer;
 border-color:#58a6ff;
 }
 
+.empty{
+color:#8b949e;
+margin-top:20px;
+text-align:center;
+}
+
 </style>
 
 </head>
@@ -73,6 +79,12 @@ const data=await r.json();
 
 let html=`<h2>MASTER ${data.master}</h2>`;
 
+if(data.packages.length===0){
+
+html+=`<div class="empty">No packages yet</div>`;
+
+}else{
+
 data.packages.forEach(p=>{
 
 html+=`
@@ -83,6 +95,8 @@ ${p.furniture} / ${p.component} (${p.qty})
 `;
 
 });
+
+}
 
 document.getElementById("list").innerHTML=html;
 
