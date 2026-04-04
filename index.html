@@ -32,6 +32,14 @@ margin:auto;
 padding:20px;
 }
 
+.back{
+display:inline-block;
+margin-bottom:20px;
+color:#58a6ff;
+cursor:pointer;
+font-size:14px;
+}
+
 .card{
 background:#161b22;
 border:1px solid #30363d;
@@ -135,6 +143,8 @@ background:white;
 
 <div class="container">
 
+<div class="back" onclick="goBack()">← Back to Master</div>
+
 <div class="card">
 
 <div id="content">
@@ -163,6 +173,15 @@ const id = params.get("id");
 
 let images=[];
 let currentIndex=0;
+let masterId="";
+
+function goBack(){
+
+if(masterId){
+window.location="box.html?id="+masterId;
+}
+
+}
 
 function convertDriveLink(url){
 
@@ -278,6 +297,8 @@ if(data.error){
 document.getElementById("content").innerHTML="Package not found";
 return;
 }
+
+masterId=data.master_package_id;
 
 let html="";
 
