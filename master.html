@@ -11,7 +11,7 @@
 <style>
 
 body{
-font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+font-family:Inter,system-ui;
 background:#0d1117;
 color:#e6edf3;
 margin:0;
@@ -22,25 +22,20 @@ margin:0;
 .header{
 background:#161b22;
 border-bottom:1px solid #30363d;
-padding:14px 20px;
+padding:16px 20px;
 display:flex;
-align-items:center;
-gap:12px;
-}
-
-.brand{
-display:flex;
-flex-direction:column;
+justify-content:center;
 }
 
 .brandTitle{
 font-weight:600;
-font-size:15px;
+font-size:16px;
 }
 
 .brandSub{
 font-size:12px;
 color:#8b949e;
+text-align:center;
 }
 
 /* LAYOUT */
@@ -63,22 +58,14 @@ max-width:420px;
 text-align:center;
 }
 
-/* STATUS */
-
 .statusBox{
 margin-bottom:20px;
-padding:12px;
-border-radius:8px;
+padding:16px;
+border-radius:10px;
 background:#0b2239;
-font-size:16px;
+font-size:18px;
+font-weight:600;
 }
-
-.active{
-color:#58a6ff;
-font-weight:bold;
-}
-
-/* INPUT */
 
 input{
 width:100%;
@@ -92,8 +79,6 @@ background:#0d1117;
 color:white;
 border:1px solid #30363d;
 }
-
-/* BUTTONS */
 
 button{
 width:100%;
@@ -123,7 +108,7 @@ color:white;
 
 <div class="header">
 
-<div class="brand">
+<div>
 <div class="brandTitle">Inser Home</div>
 <div class="brandSub">Packing System</div>
 </div>
@@ -137,11 +122,10 @@ color:white;
 <h2>📦 Master Manager</h2>
 
 <div class="statusBox">
-ACTIVE MASTER:<br>
-<span id="activeMaster" class="active">loading...</span>
+<span id="activeMaster">Loading...</span>
 </div>
 
-<input id="master" placeholder="Master ID (pl. 401 vagy CAB1)">
+<input id="master" placeholder="Master ID (pl. 401)">
 
 <button class="open" onclick="openMaster()">OPEN MASTER</button>
 
@@ -157,28 +141,21 @@ const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc
 
 async function loadStatus(){
 
-try{
-
 let form=new FormData();
 form.append("action","status");
 
-let r=await fetch(API,{
-method:"POST",
-body:form
-});
-
+let r=await fetch(API,{method:"POST",body:form});
 let data=await r.json();
 
 if(data.active){
-document.getElementById("activeMaster").innerText=data.active;
+
+document.getElementById("activeMaster").innerHTML=
+"🟢 MASTER "+data.active+" OPEN";
+
 }else{
-document.getElementById("activeMaster").innerText="none";
-}
 
-}
-catch(e){
-
-document.getElementById("activeMaster").innerText="error";
+document.getElementById("activeMaster").innerHTML=
+"🔴 NO MASTER OPEN";
 
 }
 
@@ -197,16 +174,9 @@ let form=new FormData();
 form.append("action","open");
 form.append("master",master);
 
-let r=await fetch(API,{
-method:"POST",
-body:form
-});
-
-let data=await r.json();
+await fetch(API,{method:"POST",body:form});
 
 loadStatus();
-
-/* QR PRINT PAGE */
 
 window.open("print.html?id="+master,"_blank");
 
@@ -216,24 +186,15 @@ async function closeMaster(){
 
 let active=document.getElementById("activeMaster").innerText;
 
-if(!active || active==="none"){
+if(active.includes("NO MASTER")){
 alert("Nincs aktív Master");
 return;
 }
 
-let confirmClose=confirm("Biztos lezárod a Master-t?\n\nMASTER: "+active);
-
-if(!confirmClose) return;
-
 let form=new FormData();
 form.append("action","close");
 
-let r=await fetch(API,{
-method:"POST",
-body:form
-});
-
-let data=await r.json();
+await fetch(API,{method:"POST",body:form});
 
 loadStatus();
 
