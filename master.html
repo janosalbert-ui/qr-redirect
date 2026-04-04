@@ -28,10 +28,6 @@ align-items:center;
 gap:12px;
 }
 
-.logo{
-height:32px;
-}
-
 .brand{
 display:flex;
 flex-direction:column;
@@ -89,7 +85,6 @@ width:100%;
 padding:14px;
 font-size:18px;
 border-radius:8px;
-border:none;
 margin-top:15px;
 text-align:center;
 box-sizing:border-box;
@@ -120,16 +115,6 @@ background:#da3633;
 color:white;
 }
 
-/* LOG */
-
-.log{
-margin-top:15px;
-font-size:13px;
-color:#8b949e;
-word-break:break-word;
-text-align:left;
-}
-
 </style>
 
 </head>
@@ -137,8 +122,6 @@ text-align:left;
 <body>
 
 <div class="header">
-
-<img src="logo.png" class="logo">
 
 <div class="brand">
 <div class="brandTitle">Inser Home</div>
@@ -164,8 +147,6 @@ ACTIVE MASTER:<br>
 
 <button class="close" onclick="closeMaster()">CLOSE MASTER</button>
 
-<div id="log" class="log"></div>
-
 </div>
 
 </div>
@@ -173,10 +154,6 @@ ACTIVE MASTER:<br>
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
-
-function log(txt){
-document.getElementById("log").innerText=txt;
-}
 
 async function loadStatus(){
 
@@ -227,11 +204,9 @@ body:form
 
 let data=await r.json();
 
-log(JSON.stringify(data,null,2));
-
 loadStatus();
 
-/* QR PRINT PAGE AUTOMATIKUS MEGNYITÁSA */
+/* QR PRINT PAGE */
 
 window.open("print.html?id="+master,"_blank");
 
@@ -259,8 +234,6 @@ body:form
 });
 
 let data=await r.json();
-
-log(JSON.stringify(data,null,2));
 
 loadStatus();
 
