@@ -2,56 +2,37 @@
 <html>
 
 <head>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Master Box</title>
 
-<style>
-
-body{
-font-family:system-ui;
-background:#0d1117;
-color:white;
-margin:0;
-padding:20px;
-}
-
-.header{
-font-size:22px;
-margin-bottom:20px;
-}
-
-.card{
-background:#161b22;
-border-radius:10px;
-padding:15px;
-}
-
-.item{
-padding:12px;
-border-bottom:1px solid #30363d;
-cursor:pointer;
-}
-
-.item:hover{
-background:#1f2630;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<div class="header" id="title">
+<div class="header">
+
+<img src="logo.png" class="logo">
+
+<div class="brand">
+<div class="brandTitle">Inser Home</div>
+<div class="brandSub">Packing System</div>
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<div id="content">
 Loading...
 </div>
 
-<div class="card" id="list">
-
-Loading...
+</div>
 
 </div>
 
@@ -67,31 +48,33 @@ async function load(){
 let r=await fetch(API+"?master="+master);
 let data=await r.json();
 
-document.getElementById("title").innerText="MASTER "+data.master;
-
 let html="";
+
+html+=`<div class="masterTitle">📦 MASTER ${data.master}</div>`;
+html+=`<div class="masterMeta">${data.packages.length} packages</div>`;
 
 data.packages.forEach(p=>{
 
 html+=`
 <div class="item" onclick="openPackage('${p.id}')">
 
-<b>${p.id}</b><br>
+<div class="itemTitle">${p.id}</div>
+
+<div class="itemMeta">
 ${p.furniture} / ${p.component} (${p.qty})
+</div>
 
 </div>
 `;
 
 });
 
-document.getElementById("list").innerHTML=html;
+document.getElementById("content").innerHTML=html;
 
 }
 
 function openPackage(id){
-
 window.location.href="index.html?id="+id;
-
 }
 
 load();
