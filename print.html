@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<title>Master QR</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+padding:40px;
+}
+
+.qr{
+margin-top:30px;
+}
+
+button{
+margin-top:30px;
+padding:12px 20px;
+font-size:16px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="title"></h1>
+
+<div class="qr">
+<img id="qr">
+</div>
+
+<button onclick="window.print()">PRINT</button>
+
+<script>
+
+const params=new URLSearchParams(window.location.search);
+const master=params.get("id");
+
+document.getElementById("title").innerText="MASTER "+master;
+
+const url="https://janosalbert-ui.github.io/qr-redirect/box.html?id="+master;
+
+const qr="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="+encodeURIComponent(url);
+
+document.getElementById("qr").src=qr;
+
+</script>
+
+</body>
+
+</html>
