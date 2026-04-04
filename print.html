@@ -4,24 +4,80 @@
 <head>
 
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Master QR</title>
 
 <style>
 
 body{
-font-family:Arial;
+font-family:Inter,system-ui;
+background:white;
+color:black;
 text-align:center;
 padding:40px;
 }
 
-.qr{
-margin-top:30px;
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+margin-bottom:30px;
 }
+
+.logo{
+height:40px;
+}
+
+/* TITLE */
+
+.master{
+font-size:36px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.subtitle{
+font-size:16px;
+color:#555;
+margin-bottom:30px;
+}
+
+/* QR */
+
+.qr img{
+width:320px;
+height:320px;
+}
+
+/* PRINT BUTTON */
 
 button{
 margin-top:30px;
-padding:12px 20px;
+padding:14px 25px;
 font-size:16px;
+border:none;
+background:black;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* PRINT MODE */
+
+@media print{
+
+button{
+display:none;
+}
+
+body{
+padding:0;
+}
+
 }
 
 </style>
@@ -30,29 +86,43 @@ font-size:16px;
 
 <body>
 
-<h1 id="title"></h1>
+<div class="header">
+
+<img src="logo.png" class="logo">
+
+<div>
+<strong>Inser Home</strong><br>
+Packing System
+</div>
+
+</div>
+
+<div id="masterTitle" class="master"></div>
+
+<div class="subtitle">
+SCAN TO OPEN BOX CONTENT
+</div>
 
 <div class="qr">
 <img id="qr">
 </div>
 
-<button onclick="window.print()">PRINT</button>
+<button onclick="window.print()">PRINT LABEL</button>
 
 <script>
 
 const params=new URLSearchParams(window.location.search);
 const master=params.get("id");
 
-document.getElementById("title").innerText="MASTER "+master;
+document.getElementById("masterTitle").innerText="MASTER "+master;
 
-const url="https://janosalbert-ui.github.io/qr-redirect/box.html?id="+master;
+const targetURL="https://janosalbert-ui.github.io/qr-redirect/box.html?id="+master;
 
-const qr="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="+encodeURIComponent(url);
+const qr="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="+encodeURIComponent(targetURL);
 
 document.getElementById("qr").src=qr;
 
 </script>
 
 </body>
-
 </html>
