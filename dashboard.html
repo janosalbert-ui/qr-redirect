@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Packing Dashboard</title>
+
+<style>
+
+body{
+font-family:system-ui;
+background:#0d1117;
+color:#e6edf3;
+margin:0;
+}
+
+/* HEADER */
+
+.header{
+background:#161b22;
+border-bottom:1px solid #30363d;
+padding:20px;
+text-align:center;
+}
+
+.title{
+font-size:20px;
+font-weight:700;
+}
+
+.subtitle{
+font-size:13px;
+color:#8b949e;
+}
+
+/* LAYOUT */
+
+.container{
+max-width:900px;
+margin:auto;
+padding:30px 20px;
+}
+
+/* CARDS */
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+margin-bottom:30px;
+}
+
+.card{
+background:#161b22;
+border:1px solid #30363d;
+border-radius:12px;
+padding:25px;
+text-align:center;
+}
+
+.value{
+font-size:36px;
+font-weight:700;
+margin-top:10px;
+}
+
+.label{
+color:#8b949e;
+font-size:14px;
+}
+
+/* BUTTONS */
+
+.buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+button{
+padding:16px;
+font-size:15px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+background:#2ea043;
+color:white;
+}
+
+button.secondary{
+background:#30363d;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="title">Inser Home</div>
+<div class="subtitle">Packing System Dashboard</div>
+
+</div>
+
+<div class="container">
+
+<div class="grid">
+
+<div class="card">
+
+<div class="label">Total Packages</div>
+<div id="packages" class="value">...</div>
+
+</div>
+
+<div class="card">
+
+<div class="label">Active Master</div>
+<div id="master" class="value">...</div>
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button onclick="openMasterManager()">
+Master Manager
+</button>
+
+<button class="secondary" onclick="openForm()">
+Open Form
+</button>
+
+<button onclick="openBox()">
+View Active Master
+</button>
+
+<button class="secondary" onclick="location.reload()">
+Refresh
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
+/* LOAD STATUS */
+
+async function loadStatus(){
+
+let form=new FormData();
+form.append("action","status");
+
+let r=await fetch(API,{
+method:"POST",
+body:form
+});
+
+let data=await r.json();
+
+if(data.active){
+
+document.getElementById("master").innerText=data.active;
+
+}else{
+
+document.getElementById("master").innerText="None";
+
+}
+
+}
+
+/* LOAD PACKAGE COUNT */
+
+async function loadPackages(){
+
+const url=API+"?master=ALL";
+
+try{
+
+let r=await fetch(url);
+let data=await r.json();
+
+document.getElementById("packages").innerText=data.packages.length;
+
+}
+catch{
+
+document.getElementById("packages").innerText="?";
+
+}
+
+}
+
+/* BUTTONS */
+
+function openMasterManager(){
+
+window.location="master.html";
+
+}
+
+function openForm(){
+
+window.open("YOUR_FORM_LINK","_blank");
+
+}
+
+function openBox(){
+
+let master=document.getElementById("master").innerText;
+
+if(master==="None"){
+alert("No master open");
+return;
+}
+
+window.location="box.html?id="+master;
+
+}
+
+/* INIT */
+
+loadStatus();
+loadPackages();
+
+</script>
+
+</body>
+</html>
