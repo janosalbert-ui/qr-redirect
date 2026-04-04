@@ -2,38 +2,61 @@
 <html>
 
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Master Box</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+
+body{
+font-family:system-ui;
+background:#0d1117;
+color:#e6edf3;
+margin:0;
+}
+
+.header{
+background:#161b22;
+padding:14px 20px;
+font-size:18px;
+font-weight:600;
+border-bottom:1px solid #30363d;
+text-align:center;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#161b22;
+border:1px solid #30363d;
+border-radius:10px;
+padding:20px;
+margin-bottom:15px;
+cursor:pointer;
+}
+
+.card:hover{
+border-color:#58a6ff;
+}
+
+</style>
 
 </head>
 
 <body>
 
 <div class="header">
-
-<img src="logo.png" class="logo">
-
-<div class="brand">
-<div class="brandTitle">Inser Home</div>
-<div class="brandSub">Packing System</div>
+📦 Master Package
 </div>
 
-</div>
-
-<div class="container">
-
-<div class="card">
-
-<div id="content">
+<div class="container" id="list">
 Loading...
-</div>
-
-</div>
-
 </div>
 
 <script>
@@ -45,36 +68,30 @@ const master=params.get("id");
 
 async function load(){
 
-let r=await fetch(API+"?master="+master);
-let data=await r.json();
+const r=await fetch(API+"?master="+master);
+const data=await r.json();
 
-let html="";
-
-html+=`<div class="masterTitle">📦 MASTER ${data.master}</div>`;
-html+=`<div class="masterMeta">${data.packages.length} packages</div>`;
+let html=`<h2>MASTER ${data.master}</h2>`;
 
 data.packages.forEach(p=>{
 
 html+=`
-<div class="item" onclick="openPackage('${p.id}')">
-
-<div class="itemTitle">${p.id}</div>
-
-<div class="itemMeta">
+<div class="card" onclick="openPackage('${p.id}')">
+<b>${p.id}</b><br>
 ${p.furniture} / ${p.component} (${p.qty})
-</div>
-
 </div>
 `;
 
 });
 
-document.getElementById("content").innerHTML=html;
+document.getElementById("list").innerHTML=html;
 
 }
 
 function openPackage(id){
-window.location.href="index.html?id="+id;
+
+window.location="index.html?id="+id;
+
 }
 
 load();
