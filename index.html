@@ -175,6 +175,8 @@ let images=[];
 let currentIndex=0;
 let masterId="";
 
+/* BACK */
+
 function goBack(){
 
 if(masterId){
@@ -182,6 +184,24 @@ window.location="box.html?id="+masterId;
 }
 
 }
+
+/* DATE FORMAT */
+
+function formatDate(d){
+
+if(!d) return "";
+
+let date=new Date(d);
+
+let day=String(date.getDate()).padStart(2,'0');
+let month=String(date.getMonth()+1).padStart(2,'0');
+let year=date.getFullYear();
+
+return day+"."+month+"."+year;
+
+}
+
+/* DRIVE IMAGE FIX */
 
 function convertDriveLink(url){
 
@@ -317,7 +337,7 @@ html+=`
 
 <div class="infoRow">
 <div class="label">Date</div>
-<div class="value">${data.date}</div>
+<div class="value">${formatDate(data.date)}</div>
 </div>
 
 <div class="infoRow">
