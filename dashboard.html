@@ -17,8 +17,6 @@ color:#e6edf3;
 margin:0;
 }
 
-/* HEADER */
-
 .header{
 background:#161b22;
 border-bottom:1px solid #30363d;
@@ -27,7 +25,7 @@ text-align:center;
 }
 
 .title{
-font-size:20px;
+font-size:22px;
 font-weight:700;
 }
 
@@ -36,15 +34,11 @@ font-size:13px;
 color:#8b949e;
 }
 
-/* LAYOUT */
-
 .container{
 max-width:900px;
 margin:auto;
 padding:30px 20px;
 }
-
-/* CARDS */
 
 .grid{
 display:grid;
@@ -61,18 +55,15 @@ padding:25px;
 text-align:center;
 }
 
+.label{
+color:#8b949e;
+}
+
 .value{
 font-size:36px;
 font-weight:700;
 margin-top:10px;
 }
-
-.label{
-color:#8b949e;
-font-size:14px;
-}
-
-/* BUTTONS */
 
 .buttons{
 display:grid;
@@ -112,24 +103,20 @@ background:#30363d;
 <div class="grid">
 
 <div class="card">
-
 <div class="label">Total Packages</div>
 <div id="packages" class="value">...</div>
-
 </div>
 
 <div class="card">
-
 <div class="label">Active Master</div>
 <div id="master" class="value">...</div>
-
 </div>
 
 </div>
 
 <div class="buttons">
 
-<button onclick="openMasterManager()">
+<button onclick="location='master.html'">
 Master Manager
 </button>
 
@@ -153,8 +140,6 @@ Refresh
 
 const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
 
-/* LOAD STATUS */
-
 async function loadStatus(){
 
 let form=new FormData();
@@ -167,51 +152,13 @@ body:form
 
 let data=await r.json();
 
-if(data.active){
-
-document.getElementById("master").innerText=data.active;
-
-}else{
-
-document.getElementById("master").innerText="None";
-
-}
-
-}
-
-/* LOAD PACKAGE COUNT */
-
-async function loadPackages(){
-
-const url=API+"?master=ALL";
-
-try{
-
-let r=await fetch(url);
-let data=await r.json();
-
-document.getElementById("packages").innerText=data.packages.length;
-
-}
-catch{
-
-document.getElementById("packages").innerText="?";
-
-}
-
-}
-
-/* BUTTONS */
-
-function openMasterManager(){
-
-window.location="master.html";
+document.getElementById("master").innerText=data.active || "None";
 
 }
 
 function openForm(){
 
-window.open("YOUR_FORM_LINK","_blank");
+window.open("FORM_URL","_blank");
 
 }
 
@@ -228,10 +175,7 @@ window.location="box.html?id="+master;
 
 }
 
-/* INIT */
-
 loadStatus();
-loadPackages();
 
 </script>
 
