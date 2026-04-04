@@ -17,28 +17,36 @@ color:#e6edf3;
 margin:0;
 }
 
+/* HEADER */
+
 .header{
 background:#161b22;
 border-bottom:1px solid #30363d;
-padding:20px;
-text-align:center;
+padding:14px 20px;
+display:flex;
+align-items:center;
+cursor:pointer;
 }
 
-.title{
-font-size:22px;
-font-weight:700;
+.brandTitle{
+font-weight:600;
+font-size:15px;
 }
 
-.subtitle{
-font-size:13px;
+.brandSub{
+font-size:12px;
 color:#8b949e;
 }
+
+/* LAYOUT */
 
 .container{
 max-width:900px;
 margin:auto;
 padding:30px 20px;
 }
+
+/* CARDS */
 
 .grid{
 display:grid;
@@ -64,6 +72,8 @@ font-size:36px;
 font-weight:700;
 margin-top:10px;
 }
+
+/* BUTTONS */
 
 .buttons{
 display:grid;
@@ -91,10 +101,12 @@ background:#30363d;
 
 <body>
 
-<div class="header">
+<div class="header" onclick="location.href='dashboard.html'">
 
-<div class="title">Inser Home</div>
-<div class="subtitle">Packing System Dashboard</div>
+<div>
+<div class="brandTitle">Inser Home</div>
+<div class="brandSub">Packing System</div>
+</div>
 
 </div>
 
@@ -140,6 +152,8 @@ Refresh
 
 const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
 
+/* ACTIVE MASTER */
+
 async function loadStatus(){
 
 let form=new FormData();
@@ -155,6 +169,27 @@ let data=await r.json();
 document.getElementById("master").innerText=data.active || "None";
 
 }
+
+/* PACKAGE COUNT */
+
+async function loadPackages(){
+
+try{
+
+const r=await fetch(API+"?master=ALL");
+const data=await r.json();
+
+document.getElementById("packages").innerText=data.packages.length;
+
+}catch{
+
+document.getElementById("packages").innerText="?";
+
+}
+
+}
+
+/* BUTTONS */
 
 function openForm(){
 
@@ -176,6 +211,7 @@ window.location="box.html?id="+master;
 }
 
 loadStatus();
+loadPackages();
 
 </script>
 
