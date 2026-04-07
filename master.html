@@ -175,12 +175,15 @@ document.getElementById("activeMaster").innerHTML=
 
 async function loadGroups(){
 
+try{
+
 let r = await fetch(API+"?groups=1");
 let data = await r.json();
 
 let list = document.getElementById("groupList");
-
 list.innerHTML="";
+
+if(!data.groups) return;
 
 data.groups.forEach(function(g){
 
@@ -190,6 +193,12 @@ option.value=g;
 list.appendChild(option);
 
 });
+
+}catch(err){
+
+console.log("Group lista nem elérhető");
+
+}
 
 }
 
@@ -213,6 +222,7 @@ form.append("group",group);
 await fetch(API,{method:"POST",body:form});
 
 loadStatus();
+loadGroups();
 
 window.open("print.html?id="+master,"_blank");
 
@@ -224,7 +234,7 @@ async function closeMaster(){
 
 let active=document.getElementById("activeMaster").innerText;
 
-if(active.includes("NO MASTER")){
+if(!active.includes("MASTER")){
 alert("Nincs aktív Master");
 return;
 }
