@@ -126,6 +126,7 @@ color:white;
 </div>
 
 <input id="master" placeholder="Master ID (pl. 401)">
+
 <input id="group" list="groupList" placeholder="Group (opcionális)">
 <datalist id="groupList"></datalist>
 
@@ -140,6 +141,8 @@ color:white;
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
+/* STATUS BETÖLTÉSE */
 
 async function loadStatus(){
 
@@ -168,6 +171,30 @@ document.getElementById("activeMaster").innerHTML=
 
 }
 
+/* GROUP LISTA BETÖLTÉSE */
+
+async function loadGroups(){
+
+let r = await fetch(API+"?groups=1");
+let data = await r.json();
+
+let list = document.getElementById("groupList");
+
+list.innerHTML="";
+
+data.groups.forEach(function(g){
+
+let option=document.createElement("option");
+option.value=g;
+
+list.appendChild(option);
+
+});
+
+}
+
+/* MASTER NYITÁSA */
+
 async function openMaster(){
 
 let master=document.getElementById("master").value.trim();
@@ -181,7 +208,7 @@ return;
 let form=new FormData();
 form.append("action","open");
 form.append("master",master);
-form.append("group",group);   /* <<< EZ AZ ÚJ SOR */
+form.append("group",group);
 
 await fetch(API,{method:"POST",body:form});
 
@@ -190,6 +217,8 @@ loadStatus();
 window.open("print.html?id="+master,"_blank");
 
 }
+
+/* MASTER ZÁRÁSA */
 
 async function closeMaster(){
 
@@ -209,7 +238,10 @@ loadStatus();
 
 }
 
+/* OLDAL BETÖLTÉS */
+
 loadStatus();
+loadGroups();
 
 </script>
 
