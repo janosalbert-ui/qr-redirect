@@ -150,8 +150,13 @@ let data=await r.json();
 
 if(data.active){
 
-document.getElementById("activeMaster").innerHTML=
-"🟢 MASTER "+data.active+" OPEN";
+let text="🟢 MASTER "+data.active+" OPEN";
+
+if(data.group){
+text+="<br><span style='font-size:14px;color:#8b949e'>GROUP: "+data.group+"</span>";
+}
+
+document.getElementById("activeMaster").innerHTML=text;
 
 }else{
 
