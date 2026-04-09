@@ -100,6 +100,37 @@ background:#da3633;
 color:white;
 }
 
+/* LOADING OVERLAY */
+
+.loadingOverlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(13,17,23,0.92);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+/* LOADER BOX */
+
+.loaderBox{
+width:70px;
+height:70px;
+border:4px solid #30363d;
+border-top:4px solid #2ea043;
+border-radius:10px;
+animation:spinBox 1s linear infinite;
+}
+
+@keyframes spinBox{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
 </style>
 
 </head>
@@ -140,6 +171,31 @@ color:white;
 
 const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
 
+/* LOADER */
+
+function showLoading(){
+document.getElementById("loading").style.display="flex";
+}
+
+function hideLoading(){
+document.getElementById("loading").style.display="none";
+}
+
+/* UNIVERZÁLIS API HÍVÁS */
+
+async function apiCall(form){
+
+showLoading();
+
+let r = await fetch(API,{method:"POST",body:form});
+let data = await r.json();
+
+hideLoading();
+
+return data;
+
+}
+
 /* STATUS BETÖLTÉSE */
 
 async function loadStatus(){
@@ -169,7 +225,7 @@ document.getElementById("activeMaster").innerHTML=
 
 }
 
-/* GROUP LISTA BETÖLTÉSE */
+/* GROUP LISTA */
 
 async function loadGroups(){
 
@@ -200,7 +256,7 @@ console.log("Group lista nem elérhető");
 
 }
 
-/* MASTER NYITÁSA */
+/* MASTER NYITÁS */
 
 async function openMaster(){
 
@@ -210,25 +266,18 @@ let form=new FormData();
 form.append("action","open");
 form.append("group",group);
 
-/* SERVER HÍVÁS */
-
-let res = await fetch(API,{method:"POST",body:form});
-let data = await res.json();
-
-/* ÚJ MASTER ID */
+let data = await apiCall(form);
 
 let master = data.master;
 
 loadStatus();
 loadGroups();
 
-/* QR NYOMTATÁS */
-
 window.open("print.html?id="+master,"_blank");
 
 }
 
-/* MASTER ZÁRÁSA */
+/* MASTER ZÁRÁS */
 
 async function closeMaster(){
 
@@ -242,7 +291,7 @@ return;
 let form=new FormData();
 form.append("action","close");
 
-await fetch(API,{method:"POST",body:form});
+await apiCall(form);
 
 loadStatus();
 
@@ -254,6 +303,10 @@ loadStatus();
 loadGroups();
 
 </script>
+
+<div id="loading" class="loadingOverlay">
+<div class="loaderBox"></div>
+</div>
 
 </body>
 </html>
