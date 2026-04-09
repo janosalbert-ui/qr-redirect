@@ -206,23 +206,25 @@ console.log("Group lista nem elérhető");
 
 async function openMaster(){
 
-let master=document.getElementById("master").value.trim();
 let group=document.getElementById("group").value.trim();
-
-if(!master){
-alert("Adj meg Master ID-t");
-return;
-}
 
 let form=new FormData();
 form.append("action","open");
-form.append("master",master);
 form.append("group",group);
 
-await fetch(API,{method:"POST",body:form});
+/* SERVER HÍVÁS */
+
+let res = await fetch(API,{method:"POST",body:form});
+let data = await res.json();
+
+/* ÚJ MASTER ID */
+
+let master = data.master;
 
 loadStatus();
 loadGroups();
+
+/* QR NYOMTATÁS */
 
 window.open("print.html?id="+master,"_blank");
 
