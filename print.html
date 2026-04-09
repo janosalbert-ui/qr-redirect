@@ -45,6 +45,13 @@ color:#666;
 font-size:42px;
 font-weight:800;
 margin-top:30px;
+margin-bottom:5px;
+}
+
+.group{
+font-size:20px;
+font-weight:600;
+color:#555;
 margin-bottom:10px;
 }
 
@@ -108,6 +115,8 @@ padding:0;
 
 <div id="masterTitle" class="master"></div>
 
+<div id="groupTitle" class="group">GROUP —</div>
+
 <div class="subtitle">
 SCAN TO OPEN BOX CONTENT
 </div>
@@ -120,16 +129,52 @@ SCAN TO OPEN BOX CONTENT
 
 <script>
 
+const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
 const params=new URLSearchParams(window.location.search);
 const master=params.get("id");
 
+/* MASTER TITLE */
+
 document.getElementById("masterTitle").innerText="MASTER "+master;
+
+/* QR */
 
 const targetURL="https://janosalbert-ui.github.io/qr-redirect/box.html?id="+master;
 
 const qr="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="+encodeURIComponent(targetURL);
 
 document.getElementById("qr").src=qr;
+
+/* GROUP LEKÉRÉS */
+
+async function loadGroup(){
+
+try{
+
+let form=new FormData();
+form.append("action","status");
+
+let r=await fetch(API,{method:"POST",body:form});
+let data=await r.json();
+
+let group="—";
+
+if(data.group){
+group=data.group;
+}
+
+document.getElementById("groupTitle").innerText="GROUP "+group;
+
+}catch(e){
+
+document.getElementById("groupTitle").innerText="GROUP —";
+
+}
+
+}
+
+loadGroup();
 
 </script>
 
