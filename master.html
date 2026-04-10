@@ -316,7 +316,7 @@ async function loadMasters(){
 
   try{
 
-    const r = await fetch(API + "?masters=1");
+    const r = await fetch(API + "?masters=1&nocache=" + new Date().getTime());
     const data = await r.json();
 
     const select = document.getElementById("masterSelect");
