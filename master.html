@@ -160,6 +160,11 @@ animation:spinBox 1s linear infinite;
 <datalist id="groupList"></datalist>
 
 <button class="open" onclick="openMaster()">OPEN MASTER</button>
+<select id="masterSelect" style="margin-top:15px;width:100%;padding:14px;border-radius:8px;background:#0d1117;color:white;border:1px solid #30363d;"></select>
+
+<button onclick="continueMaster()" style="background:#238636;color:white;">
+Continue Existing Master
+</button>
 
 <button class="close" onclick="closeMaster()">CLOSE MASTER</button>
 
@@ -301,6 +306,63 @@ loadStatus();
 
 loadStatus();
 loadGroups();
+loadMasters();
+/* 🆕 MASTER LISTA BETÖLTÉS */
+
+async function loadMasters(){
+
+  try{
+
+    const r = await fetch(API + "?masters=1");
+    const data = await r.json();
+
+    const select = document.getElementById("masterSelect");
+
+    select.innerHTML = "";
+
+    if(!data.masters) return;
+
+    data.masters.forEach(m => {
+      const opt = document.createElement("option");
+      opt.value = m;
+      opt.textContent = "MASTER " + m;
+      select.appendChild(opt);
+    });
+
+  }catch(err){
+    console.log("Master lista nem elérhető");
+  }
+
+}
+
+
+/* 🆕 CONTINUE MASTER */
+
+async function continueMaster(){
+
+  const master = document.getElementById("masterSelect").value;
+
+  if(!master){
+    alert("Válassz Mastert");
+    return;
+  }
+
+  let form=new FormData();
+  form.append("action","open");
+  form.append("master", master);
+
+  let data = await apiCall(form);
+
+  if(data.status === "error"){
+    alert(data.message);
+    return;
+  }
+
+  alert("MASTER " + master + " aktiválva");
+
+  loadStatus();
+
+}
 
 </script>
 
