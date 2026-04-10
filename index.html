@@ -326,6 +326,11 @@ html+=`
 <div class="info">
 
 <div class="infoRow">
+<div class="label">Group</div>
+<div class="value">${data.group ? data.group : "No group assigned"}</div>
+</div>
+
+<div class="infoRow">
 <div class="label">Master Package</div>
 <div class="value">${data.master_package_id||"-"}</div>
 </div>
@@ -358,11 +363,6 @@ html+=`
 <div class="infoRow">
 <div class="label">Quantity</div>
 <div class="value">${data.qty}</div>
-</div>
-
-<div class="infoRow">
-<div class="label">Group</div>
-<div class="value">${data.group ? data.group : "No group assigned"}</div>
 </div>
 
 </div>
