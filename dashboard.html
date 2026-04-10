@@ -140,6 +140,10 @@ Open Form
 View Active Master
 </button>
 
+<button onclick="printPacking()">
+Print Packing List
+</button>
+
 <button class="secondary" onclick="location.reload()">
 Refresh
 </button>
@@ -151,6 +155,10 @@ Refresh
 <script>
 
 const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
+let currentGroup = "";
+
+/* STATUS */
 
 async function loadStatus(){
 
@@ -166,7 +174,12 @@ let data=await r.json();
 
 document.getElementById("master").innerText=data.active || "None";
 
+/* 🆕 GROUP mentése */
+currentGroup = data.group || "";
+
 }
+
+/* PACKAGES */
 
 async function loadPackages(){
 
@@ -185,11 +198,15 @@ document.getElementById("packages").innerText="?";
 
 }
 
+/* FORM */
+
 function openForm(){
 
 window.open("https://docs.google.com/forms/d/1nYzTfbuf3Le7rWJVCKsHVDv9U_qvseppHf-Y_6S1moE","_blank");
 
 }
+
+/* OPEN MASTER */
 
 function openBox(){
 
@@ -203,6 +220,21 @@ return;
 window.location="box.html?id="+master;
 
 }
+
+/* 🆕 PRINT PACKING LIST */
+
+function printPacking(){
+
+if(!currentGroup){
+alert("No group assigned to active master");
+return;
+}
+
+window.open("print-group.html?group="+currentGroup,"_blank");
+
+}
+
+/* INIT */
 
 loadStatus();
 loadPackages();
