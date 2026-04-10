@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<title>Packing List</title>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+margin:30px;
+color:#000;
+}
+
+/* HEADER */
+
+.header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.header h1{
+margin:0;
+font-size:28px;
+}
+
+.date{
+font-size:12px;
+margin-top:5px;
+}
+
+/* GROUP */
+
+.group{
+margin-top:40px;
+}
+
+.groupTitle{
+font-size:20px;
+font-weight:700;
+border-bottom:2px solid #000;
+padding-bottom:5px;
+}
+
+/* MASTER */
+
+.master{
+margin-top:20px;
+margin-left:10px;
+}
+
+.masterTitle{
+font-size:16px;
+font-weight:600;
+margin-bottom:5px;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th, td{
+border:1px solid #000;
+padding:6px;
+font-size:12px;
+}
+
+th{
+background:#f0f0f0;
+text-align:left;
+}
+
+/* PRINT */
+
+@media print{
+body{
+margin:10mm;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+<h1>PACKING LIST</h1>
+<div class="date" id="date"></div>
+</div>
+
+<div id="content">Loading...</div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
+document.getElementById("date").innerText =
+new Date().toLocaleDateString();
+
+/* LOAD */
+
+async function load(){
+
+const r=await fetch(API+"?printall=1");
+const data=await r.json();
+
+let html="";
+
+for(let group in data.groups){
+
+html+=`<div class="group">`;
+html+=`<div class="groupTitle">GROUP: ${group}</div>`;
+
+let masters=data.groups[group];
+
+for(let master in masters){
+
+html+=`<div class="master">`;
+html+=`<div class="masterTitle">MASTER ${master}</div>`;
+
+html+=`
+<table>
+<tr>
+<th>Package</th>
+<th>Date</th>
+<th>Furniture</th>
+<th>Component</th>
+<th>Unit</th>
+<th>Qty</th>
+</tr>
+`;
+
+masters[master].forEach(p=>{
+
+html+=`
+<tr>
+<td>${p.id}</td>
+<td>${formatDate(p.date)}</td>
+<td>${p.furniture}</td>
+<td>${p.component}</td>
+<td>${p.unit}</td>
+<td>${p.qty}</td>
+</tr>
+`;
+
+});
+
+html+=`</table></div>`;
+
+}
+
+html+=`</div>`;
+
+}
+
+document.getElementById("content").innerHTML=html;
+
+/* AUTO PRINT */
+setTimeout(()=>window.print(),500);
+
+}
+
+/* DATE FORMAT */
+
+function formatDate(d){
+
+if(!d) return "";
+
+let date=new Date(d);
+
+let day=String(date.getDate()).padStart(2,'0');
+let month=String(date.getMonth()+1).padStart(2,'0');
+let year=date.getFullYear();
+
+return day+"."+month+"."+year;
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>
