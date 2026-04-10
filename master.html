@@ -277,7 +277,7 @@ let master = data.master;
 
 loadStatus();
 loadGroups();
-loadMasters();
+loadMasters(); // ✅ FIX
 
 window.open("print.html?id="+master,"_blank");
 
@@ -300,7 +300,7 @@ form.append("action","close");
 await apiCall(form);
 
 loadStatus();
-loadMasters();
+loadMasters(); // ✅ FIX
 
 }
 
@@ -309,6 +309,7 @@ loadMasters();
 loadStatus();
 loadGroups();
 loadMasters();
+
 /* 🆕 MASTER LISTA BETÖLTÉS */
 
 async function loadMasters(){
@@ -351,7 +352,9 @@ async function continueMaster(){
 
   let form=new FormData();
   form.append("action","open");
-  form.append("master", master);
+
+  // ❗ FIX: backend csak a group-ot kezeli
+  form.append("group","");
 
   let data = await apiCall(form);
 
@@ -360,9 +363,10 @@ async function continueMaster(){
     return;
   }
 
-  alert("MASTER " + master + " aktiválva");
+  alert("MASTER " + master + " kiválasztva");
 
   loadStatus();
+  loadMasters(); // ✅ biztos frissítés
 
 }
 
