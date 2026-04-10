@@ -224,10 +224,7 @@ window.location="box.html?id="+master;
 /* 🆕 PRINT PACKING LIST */
 
 function printPacking(){
-
-if(!currentGroup){
-alert("No group assigned to active master");
-return;
+window.open("print-all.html","_blank");
 }
 
 window.open("print-group.html?group="+currentGroup,"_blank");
