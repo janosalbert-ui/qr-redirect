@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Packing List</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:30px;
+}
+
+h1{
+margin-bottom:5px;
+}
+
+.summary{
+margin-bottom:20px;
+font-size:16px;
+}
+
+.master{
+margin-top:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th,td{
+border:1px solid #000;
+padding:6px;
+}
+
+th{
+background:#eee;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="groupTitle"></h1>
+
+<div class="summary" id="summary"></div>
+
+<div id="content"></div>
+
+<script>
+
+const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc6wFOhJQ-_93_ClDF59jie3U-C1POeX6joLnFKm/exec";
+
+const params=new URLSearchParams(window.location.search);
+const group=params.get("group");
+
+async function load(){
+
+const r=await fetch(API+"?printgroup="+group);
+const data=await r.json();
+
+/* HEADER */
+
+document.getElementById("groupTitle").innerText="GROUP: "+data.group;
+
+document.getElementById("summary").innerHTML=
+"Total Masters: "+data.totalMasters+"<br>"+
+"Total Packages: "+data.totalPackages;
+
+/* CONTENT */
+
+let html="";
+
+for(let master in data.masters){
+
+let packages=data.masters[master];
+
+html+=`
+<div class="master">
+<h3>MASTER ${master} (${packages.length} items)</h3>
+
+<table>
+<tr>
+<th>Package</th>
+<th>Item</th>
+<th>Qty</th>
+</tr>
+`;
+
+packages.forEach(p=>{
+html+=`
+<tr>
+<td>${p.id}</td>
+<td>${p.item}</td>
+<td>${p.qty}</td>
+</tr>
+`;
+});
+
+html+=`</table></div>`;
+
+}
+
+document.getElementById("content").innerHTML=html;
+
+/* AUTO PRINT */
+window.print();
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>
