@@ -185,10 +185,10 @@ async function loadPackages(){
 
 try{
 
-const r=await fetch(API+"?master=ALL");
+const r=await fetch(API+"?stats=1");
 const data=await r.json();
 
-document.getElementById("packages").innerText=data.packages.length;
+document.getElementById("packages").innerText=data.totalPackages;
 
 }catch{
 
