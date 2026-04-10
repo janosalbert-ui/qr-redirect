@@ -325,8 +325,11 @@ async function loadMasters(){
 
     if(!data.masters) return;
 
-    // 🔥 RENDEZÉS (legnagyobb felül)
-    const sorted = data.masters.sort((a,b) => Number(b) - Number(a));
+    // 🔥 STRING → NUMBER → RENDEZÉS → STRING
+    const sorted = data.masters
+      .map(m => Number(m))
+      .sort((a,b) => b - a)
+      .map(m => String(m));
 
     sorted.forEach(m => {
       const opt = document.createElement("option");
