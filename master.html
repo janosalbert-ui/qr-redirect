@@ -277,6 +277,7 @@ let master = data.master;
 
 loadStatus();
 loadGroups();
+loadMasters();
 
 window.open("print.html?id="+master,"_blank");
 
@@ -299,6 +300,7 @@ form.append("action","close");
 await apiCall(form);
 
 loadStatus();
+loadMasters();
 
 }
 
