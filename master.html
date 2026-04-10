@@ -320,18 +320,28 @@ async function loadMasters(){
     const data = await r.json();
 
     const select = document.getElementById("masterSelect");
-
     select.innerHTML = "";
 
     if(!data.masters) return;
 
-    // 🔥 STRING → NUMBER → RENDEZÉS → STRING
-    const sorted = data.masters
-      .map(m => Number(m))
-      .sort((a,b) => b - a)
-      .map(m => String(m));
+    // 🔥 lekérjük a SYSTEM státuszt
+    let form = new FormData();
+    form.append("action","status");
 
-    sorted.forEach(m => {
+    const statusRes = await fetch(API,{method:"POST",body:form});
+    const status = await statusRes.json();
+
+    // 🔥 EZ A LÉNYEG
+    const lastMaster = String(status.last || status.active || "");
+
+    // 🔥 lista újrarendezése
+    let list = data.masters.filter(m => m != lastMaster);
+
+    if(lastMaster){
+      list.unshift(lastMaster);
+    }
+
+    list.forEach(m => {
       const opt = document.createElement("option");
       opt.value = m;
       opt.textContent = "MASTER " + m;
