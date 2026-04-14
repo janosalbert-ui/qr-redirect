@@ -265,21 +265,27 @@ console.log("Group lista nem elérhető");
 
 async function openMaster(){
 
-let group=document.getElementById("group").value.trim();
+  let group = document.getElementById("group").value.trim();
+  let selected = document.getElementById("masterSelect").value;
 
-let form=new FormData();
-form.append("action","open");
-form.append("group",group);
+  let form = new FormData();
+  form.append("action","open");
+  form.append("group",group);
 
-let data = await apiCall(form);
+  // 👉 ha van kiválasztott → azt nyitjuk
+  if(selected){
+    form.append("master", selected);
+  }
 
-let master = data.master;
+  let data = await apiCall(form);
 
-loadStatus();
-loadGroups();
-loadMasters(); // ✅ FIX
+  let master = data.master;
 
-window.open("print.html?id="+master,"_blank");
+  loadStatus();
+  loadGroups();
+  loadMasters();
+
+  window.open("print.html?id="+master,"_blank");
 
 }
 
