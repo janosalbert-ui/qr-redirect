@@ -148,6 +148,9 @@ const API="https://script.google.com/macros/s/AKfycbxVCRizgW3QG3x0eMRjwOVX2aioyc
 const params=new URLSearchParams(window.location.search);
 const master=params.get("id");
 
+/* 🔥 LIVE STATE */
+let lastCount = -1;
+
 async function load(){
 
 if(!master){
@@ -158,6 +161,15 @@ return;
 const r=await fetch(API+"?packages=1&master="+master);
 const data=await r.json();
 
+if(!data.packages) return;
+
+/* 🔥 csak ha változott */
+if(data.packages.length === lastCount){
+return;
+}
+
+lastCount = data.packages.length;
+
 let html=`
 <div class="masterBox">
 <div class="masterTitle">MASTER ${data.master}</div>
@@ -165,7 +177,7 @@ let html=`
 </div>
 `;
 
-if(!data.packages || data.packages.length===0){
+if(data.packages.length===0){
 
 html+=`<div class="empty">No packages yet</div>`;
 
@@ -200,7 +212,11 @@ function openPackage(id){
 window.location="index.html?id="+id;
 }
 
+/* INIT */
 load();
+
+/* 🔥 AUTO REFRESH */
+setInterval(load, 3000);
 
 </script>
 
