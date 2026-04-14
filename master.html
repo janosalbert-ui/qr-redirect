@@ -261,31 +261,26 @@ console.log("Group lista nem elérhető");
 
 async function openMaster(){
 
-let group = document.getElementById("group").value.trim();
-let selected = document.getElementById("masterSelect").value;
+  let group = document.getElementById("group").value.trim();
 
-let form = new FormData();
-form.append("action","open");
-form.append("group",group);
+  let form = new FormData();
+  form.append("action","open");
+  form.append("group",group);
 
-if(selected){
-form.append("master", selected);
-}
+  let data = await apiCall(form);
 
-let data = await apiCall(form);
+  if(data.status === "error"){
+    alert(data.message);
+    return;
+  }
 
-if(data.status === "error"){
-alert(data.message);
-return;
-}
+  let master = data.master;
 
-let master = data.master;
+  loadStatus();
+  loadGroups();
+  loadMasters();
 
-loadStatus();
-loadGroups();
-loadMasters();
-
-window.open("print.html?id="+master,"_blank");
+  window.open("print.html?id="+master,"_blank");
 
 }
 
