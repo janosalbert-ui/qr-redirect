@@ -74,7 +74,7 @@ const master=params.get("id");
 
 async function load(){
 
-const r=await fetch(API+"?master="+master);
+const r=await fetch(API+"?packages=1&master="+master);
 const data=await r.json();
 
 let html=`<h2>MASTER ${data.master}</h2>`;
