@@ -10,8 +10,10 @@
 
 <style>
 
+/* BASE */
+
 body{
-font-family:Inter,system-ui;
+font-family:system-ui, Inter;
 background:#0d1117;
 color:#e6edf3;
 margin:0;
@@ -22,9 +24,10 @@ margin:0;
 .header{
 background:#161b22;
 border-bottom:1px solid #30363d;
-padding:16px 20px;
-display:flex;
-justify-content:center;
+padding:14px;
+text-align:center;
+position:sticky;
+top:0;
 }
 
 .brandTitle{
@@ -35,63 +38,72 @@ font-size:16px;
 .brandSub{
 font-size:12px;
 color:#8b949e;
-text-align:center;
 }
 
 /* LAYOUT */
 
 .container{
-max-width:900px;
+max-width:420px;
 margin:auto;
-padding:30px 20px;
-display:flex;
-justify-content:center;
+padding:15px;
 }
+
+/* CARD */
 
 .card{
 background:#161b22;
 border:1px solid #30363d;
-border-radius:12px;
-padding:25px;
-width:100%;
-max-width:420px;
-text-align:center;
+border-radius:16px;
+padding:18px;
 }
+
+/* STATUS */
 
 .statusBox{
-margin-bottom:20px;
+margin-bottom:15px;
 padding:16px;
-border-radius:10px;
+border-radius:12px;
 background:#0b2239;
 font-size:18px;
-font-weight:600;
+font-weight:700;
 }
 
-input{
+/* INPUT */
+
+input, select{
 width:100%;
 padding:14px;
 font-size:18px;
-border-radius:8px;
-margin-top:15px;
-text-align:center;
-box-sizing:border-box;
+border-radius:12px;
+margin-top:10px;
+margin-bottom:10px;
 background:#0d1117;
 color:white;
 border:1px solid #30363d;
+box-sizing:border-box;
 }
+
+/* BUTTON */
 
 button{
 width:100%;
-padding:14px;
-margin-top:15px;
-font-size:16px;
+height:55px;
+font-size:18px;
 border:none;
-border-radius:10px;
+border-radius:14px;
 cursor:pointer;
+margin-top:10px;
 }
+
+/* COLORS */
 
 .open{
 background:#2ea043;
+color:white;
+}
+
+.continue{
+background:#238636;
 color:white;
 }
 
@@ -100,7 +112,7 @@ background:#da3633;
 color:white;
 }
 
-/* LOADING OVERLAY */
+/* LOADING */
 
 .loadingOverlay{
 position:fixed;
@@ -115,20 +127,28 @@ justify-content:center;
 z-index:9999;
 }
 
-/* LOADER BOX */
-
 .loaderBox{
 width:70px;
 height:70px;
 border:4px solid #30363d;
 border-top:4px solid #2ea043;
-border-radius:10px;
+border-radius:12px;
 animation:spinBox 1s linear infinite;
 }
 
 @keyframes spinBox{
 0%{transform:rotate(0deg);}
 100%{transform:rotate(360deg);}
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.statusBox{
+font-size:17px;
+}
+
 }
 
 </style>
@@ -138,17 +158,13 @@ animation:spinBox 1s linear infinite;
 <body>
 
 <div class="header">
-<div>
 <div class="brandTitle">Inser Home</div>
 <div class="brandSub">Packing System</div>
-</div>
 </div>
 
 <div class="container">
 
 <div class="card">
-
-<h2>📦 Master Manager</h2>
 
 <div class="statusBox">
 <span id="activeMaster">Loading...</span>
@@ -157,13 +173,11 @@ animation:spinBox 1s linear infinite;
 <input id="group" list="groupList" placeholder="Group (opcionális)">
 <datalist id="groupList"></datalist>
 
-<button class="open" onclick="openMaster()">OPEN MASTER</button>
+<button class="open" onclick="openMaster()">OPEN NEW MASTER</button>
 
-<select id="masterSelect" style="margin-top:15px;width:100%;padding:14px;border-radius:8px;background:#0d1117;color:white;border:1px solid #30363d;"></select>
+<select id="masterSelect"></select>
 
-<button onclick="continueMaster()" style="background:#238636;color:white;">
-Continue Existing Master
-</button>
+<button class="continue" onclick="continueMaster()">CONTINUE MASTER</button>
 
 <button class="close" onclick="closeMaster()">CLOSE MASTER</button>
 
@@ -209,7 +223,7 @@ let data=await r.json();
 
 if(data.active){
 
-let text="🟢 MASTER "+data.active+" OPEN";
+let text="🟢 MASTER "+data.active;
 
 if(data.group){
 text+="<br><span style='font-size:14px;color:#8b949e'>GROUP: "+data.group+"</span>";
@@ -261,26 +275,26 @@ console.log("Group lista nem elérhető");
 
 async function openMaster(){
 
-  let group = document.getElementById("group").value.trim();
+let group = document.getElementById("group").value.trim();
 
-  let form = new FormData();
-  form.append("action","open");
-  form.append("group",group);
+let form = new FormData();
+form.append("action","open");
+form.append("group",group);
 
-  let data = await apiCall(form);
+let data = await apiCall(form);
 
-  if(data.status === "error"){
-    alert(data.message);
-    return;
-  }
+if(data.status === "error"){
+alert(data.message);
+return;
+}
 
-  let master = data.master;
+let master = data.master;
 
-  loadStatus();
-  loadGroups();
-  loadMasters();
+loadStatus();
+loadGroups();
+loadMasters();
 
-  window.open("print.html?id="+master,"_blank");
+window.open("print.html?id="+master,"_blank");
 
 }
 
