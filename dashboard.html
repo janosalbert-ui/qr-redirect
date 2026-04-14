@@ -10,6 +10,8 @@
 
 <style>
 
+/* BASE */
+
 body{
 font-family:system-ui;
 background:#0d1117;
@@ -22,15 +24,15 @@ margin:0;
 .header{
 background:#161b22;
 border-bottom:1px solid #30363d;
-padding:14px 20px;
-display:flex;
-align-items:center;
-cursor:pointer;
+padding:14px;
+text-align:center;
+position:sticky;
+top:0;
 }
 
 .brandTitle{
 font-weight:600;
-font-size:15px;
+font-size:16px;
 }
 
 .brandSub{
@@ -38,61 +40,80 @@ font-size:12px;
 color:#8b949e;
 }
 
-/* LAYOUT */
+/* CONTAINER */
 
 .container{
-max-width:900px;
+max-width:500px;
 margin:auto;
-padding:30px 20px;
+padding:15px;
 }
 
-/* CARDS */
+/* STATS */
 
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:20px;
-margin-bottom:30px;
+gap:12px;
+margin-bottom:20px;
 }
 
 .card{
 background:#161b22;
 border:1px solid #30363d;
-border-radius:12px;
-padding:25px;
+border-radius:16px;
+padding:18px;
 text-align:center;
 }
 
 .label{
 color:#8b949e;
+font-size:13px;
 }
 
 .value{
-font-size:36px;
-font-weight:700;
-margin-top:10px;
+font-size:28px;
+font-weight:800;
+margin-top:6px;
 }
 
-/* BUTTONS */
+/* ACTION BUTTONS */
 
 .buttons{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
 button{
-padding:16px;
-font-size:15px;
+height:60px;
+font-size:18px;
 border:none;
-border-radius:10px;
+border-radius:14px;
 cursor:pointer;
 background:#2ea043;
 color:white;
 }
 
+/* SECONDARY */
+
 button.secondary{
 background:#30363d;
+}
+
+/* HOVER */
+
+button:active{
+transform:scale(0.97);
+}
+
+/* MOBILE BOOST */
+
+@media(max-width:600px){
+
+.value{
+font-size:26px;
+}
+
 }
 
 </style>
@@ -101,16 +122,14 @@ background:#30363d;
 
 <body>
 
-<div class="header" onclick="location.href='dashboard.html'">
-
-<div>
+<div class="header">
 <div class="brandTitle">Inser Home</div>
 <div class="brandSub">Packing System</div>
 </div>
 
-</div>
-
 <div class="container">
+
+<!-- STATS -->
 
 <div class="grid">
 
@@ -126,30 +145,32 @@ background:#30363d;
 
 </div>
 
+<!-- ACTIONS -->
+
 <div class="buttons">
 
 <button onclick="location='master.html'">
-Master Manager
+📦 Master Manager
 </button>
 
 <button class="secondary" onclick="openForm()">
-Open Form
+📝 Open Form
 </button>
 
 <button onclick="openBox()">
-View Active Master
+📋 View Active Master
 </button>
 
 <button onclick="printPacking()">
-Print Packing List
+🖨️ Print Packing List
 </button>
 
 <button onclick="printLast()">
-🖨️ Last Package
+🧾 Last Package Label
 </button>
-  
+
 <button class="secondary" onclick="location.reload()">
-Refresh
+🔄 Refresh
 </button>
 
 </div>
@@ -178,7 +199,6 @@ let data=await r.json();
 
 document.getElementById("master").innerText=data.active || "None";
 
-/* 🆕 GROUP mentése */
 currentGroup = data.group || "";
 
 }
@@ -205,9 +225,7 @@ document.getElementById("packages").innerText="?";
 /* FORM */
 
 function openForm(){
-
 window.open("https://docs.google.com/forms/d/1nYzTfbuf3Le7rWJVCKsHVDv9U_qvseppHf-Y_6S1moE","_blank");
-
 }
 
 /* OPEN MASTER */
@@ -225,35 +243,36 @@ window.location="box.html?id="+master;
 
 }
 
-/* 🆕 PRINT PACKING LIST */
+/* PRINT PACKING */
 
 function printPacking(){
 window.open("print-all.html","_blank");
 }
 
-/* 🆕 PRINT LAST PACKAGE */
+/* PRINT LAST */
 
 function printLast(){
 
-  fetch(API + "?last=1")
-  .then(r => r.json())
-  .then(d => {
+fetch(API + "?last=1")
+.then(r => r.json())
+.then(d => {
 
-    if(d.error){
-      alert("No package yet");
-      return;
-    }
+if(d.error){
+alert("No package yet");
+return;
+}
 
-    var url = API
-      + "?label=1"
-      + "&group=" + encodeURIComponent(d.group)
-      + "&master=" + encodeURIComponent(d.master)
-      + "&package=" + encodeURIComponent(d.package)
-      + "&date=" + encodeURIComponent(d.date);
+var url = API
++ "?label=1"
++ "&group=" + encodeURIComponent(d.group)
++ "&master=" + encodeURIComponent(d.master)
++ "&package=" + encodeURIComponent(d.package)
++ "&date=" + encodeURIComponent(d.date);
 
-    window.open(url, "_blank");
+window.open(url, "_blank");
 
-  });
+});
+
 }
 
 /* INIT */
