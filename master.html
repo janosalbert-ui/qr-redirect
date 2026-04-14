@@ -366,11 +366,9 @@ async function continueMaster(){
     return;
   }
 
-  let form=new FormData();
+  let form = new FormData();
   form.append("action","open");
-
-  // ❗ FIX: backend csak a group-ot kezeli
-  form.append("group","");
+  form.append("master", master); // 🔥 EZ A HIÁNYZÓ SOR
 
   let data = await apiCall(form);
 
@@ -378,6 +376,13 @@ async function continueMaster(){
     alert(data.message);
     return;
   }
+
+  alert("MASTER " + master + " megnyitva");
+
+  loadStatus();
+  loadMasters();
+
+}
 
   alert("MASTER " + master + " kiválasztva");
 
