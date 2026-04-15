@@ -296,62 +296,6 @@ window.location.href = "print-label.html?package=" + d.package;
 loadStatus();
 loadPackages();
 
-/* 🔥 AUTO PRINT SYSTEM */
-
-let lastPrinted = "";
-let autoPrintEnabled = true;
-
-/* induláskor felveszi az aktuális állapotot */
-async function initAutoPrint(){
-
-  try{
-
-    const r = await fetch(API + "?last=1");
-    const d = await r.json();
-
-    if(d && d.package){
-      lastPrinted = d.package;
-    }
-
-  }catch(e){
-    console.log("AutoPrint init hiba");
-  }
-
-}
-
-/* figyelő */
-
-async function autoPrintCheck(){
-
-  if(!autoPrintEnabled) return;
-
-  try{
-
-    const r = await fetch(API + "?last=1");
-    const d = await r.json();
-
-    if(!d || !d.package) return;
-
-    /* nincs változás */
-    if(d.package === lastPrinted) return;
-
-    lastPrinted = d.package;
-
-    const url = API
-      + "?label=1"
-      + "&group=" + encodeURIComponent(d.group || "")
-      + "&master=" + encodeURIComponent(d.master || "")
-      + "&package=" + encodeURIComponent(d.package || "")
-      + "&date=" + encodeURIComponent((d.date || "").toString().split("T")[0]);
-
-    window.open(url, "_blank");
-
-  }catch(e){
-    console.log("AutoPrint hiba");
-  }
-
-}
-
 /* indulás */
 initAutoPrint();
 
