@@ -291,18 +291,9 @@ window.location.href = url;
 
 }
 
-/* INIT */
+/* AUTO PRINT FUNCTIONS */
 
-loadStatus();
-loadPackages();
-
-/* indulás */
-initAutoPrint();
-
-/* 3 mp polling */
-setInterval(autoPrintCheck, 3000);
-
-  let lastPrinted = "";
+let lastPrinted = "";
 
 async function initAutoPrint(){
   try{
@@ -343,7 +334,18 @@ async function autoPrintCheck(){
   }
 
 }
-  
+
+/* INIT */
+
+loadStatus();
+loadPackages();
+
+/* indulás */
+initAutoPrint();
+
+/* 3 mp polling */
+setInterval(autoPrintCheck, 3000);
+
 </script>
 
 </body>
