@@ -301,6 +301,49 @@ initAutoPrint();
 
 /* 3 mp polling */
 setInterval(autoPrintCheck, 3000);
+
+  let lastPrinted = "";
+
+async function initAutoPrint(){
+  try{
+    const r = await fetch(API + "?last=1");
+    const d = await r.json();
+    if(d && d.package){
+      lastPrinted = d.package;
+    }
+  }catch(e){
+    console.log("init hiba");
+  }
+}
+
+async function autoPrintCheck(){
+
+  try{
+
+    const r = await fetch(API + "?last=1");
+    const d = await r.json();
+
+    if(!d || !d.package) return;
+
+    if(d.package === lastPrinted) return;
+
+    lastPrinted = d.package;
+
+    const url = API
+      + "?label=1"
+      + "&group=" + encodeURIComponent(d.group || "")
+      + "&master=" + encodeURIComponent(d.master || "")
+      + "&package=" + encodeURIComponent(d.package || "")
+      + "&date=" + encodeURIComponent(d.date || "");
+
+    window.location.href = url;
+
+  }catch(e){
+    console.log("autoPrint hiba");
+  }
+
+}
+  
 </script>
 
 </body>
