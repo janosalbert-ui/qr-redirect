@@ -293,9 +293,11 @@ async function initAutoPrint(){
   try{
     const r = await fetch(API + "?last=1");
     const d = await r.json();
+
     if(d && d.package){
       lastPrinted = d.package;
     }
+
   }catch(e){
     console.log("init hiba");
   }
@@ -310,18 +312,13 @@ async function autoPrintCheck(){
 
     if(!d || !d.package) return;
 
+    /* nincs változás */
     if(d.package === lastPrinted) return;
 
     lastPrinted = d.package;
 
-    const url = API
-      + "?label=1"
-      + "&group=" + encodeURIComponent(d.group || "")
-      + "&master=" + encodeURIComponent(d.master || "")
-      + "&package=" + encodeURIComponent(d.package || "")
-      + "&date=" + encodeURIComponent(d.date || "");
-
-    window.open(url, "_blank");
+    /* 👉 JAVÍTVA: nem script URL, hanem saját HTML */
+    window.open("print-label.html?package=" + d.package, "_blank");
 
   }catch(e){
     console.log("autoPrint hiba");
