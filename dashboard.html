@@ -342,7 +342,7 @@ async function autoPrintCheck(){
       + "&group=" + encodeURIComponent(d.group || "")
       + "&master=" + encodeURIComponent(d.master || "")
       + "&package=" + encodeURIComponent(d.package || "")
-      + "&date=" + encodeURIComponent(d.date || "");
+      + "&date=" + encodeURIComponent((d.date || "").toString().split("T")[0]);
 
     window.open(url, "_blank");
 
