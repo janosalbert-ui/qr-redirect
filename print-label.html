@@ -109,7 +109,7 @@ document.body.innerHTML="Missing package ID";
 return;
 }
 
-/* 👉 adat lekérés ugyanazzal az API-val ami már működik */
+/* 👉 adat lekérés */
 const r=await fetch(API+"?id="+pkg);
 const d=await r.json();
 
@@ -135,9 +135,16 @@ document.getElementById("date").innerText = formatDate(d.date);
 /* QR → package viewer */
 const targetURL="https://janosalbert-ui.github.io/qr-redirect/index.html?id="+pkg;
 
-document.getElementById("qr").src=
+const img = document.getElementById("qr");
+
+img.src =
 "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
 +encodeURIComponent(targetURL);
+
+/* 🔥 PRINT CSAK HA A QR IS BETÖLTÖTT */
+img.onload = () => {
+  window.print();
+};
 
 }
 
