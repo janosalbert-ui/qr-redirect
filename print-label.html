@@ -126,12 +126,20 @@ function formatDate(d){
 
   return year + "." + month + "." + day;
 }
+  /* TEXT */
 
-/* TEXT */
-
-document.getElementById("pkg").innerText=d.id || pkg;
-document.getElementById("master").innerText=d.master_package_id || "-";
+document.getElementById("pkg").innerText = d.id || pkg;
+document.getElementById("master").innerText = d.master_package_id || "-";
 document.getElementById("date").innerText = formatDate(d.date);
+
+/* 🔥 GROUP */
+let groupText = "No group assigned";
+
+if(d.group && d.group.trim() !== ""){
+  groupText = d.group;
+}
+
+document.getElementById("group").innerText = groupText;
 
 /* QR → package viewer */
 const targetURL="https://janosalbert-ui.github.io/qr-redirect/index.html?id="+pkg;
