@@ -81,6 +81,20 @@ th, td{
   font-size:12px;
 }
 
+/* 🔥 PRINT FORCE BORDER */
+
+@media print{
+
+  table{
+    border-collapse:collapse !important;
+  }
+
+  th, td{
+    border:1px solid #000 !important;
+  }
+
+}
+
 th{
   background:#f0f0f0;
   text-align:left;
