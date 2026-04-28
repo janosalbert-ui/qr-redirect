@@ -9,65 +9,88 @@
 <style>
 
 body{
-font-family:Arial, sans-serif;
-margin:30px;
-color:#000;
+  font-family:Arial, sans-serif;
+  margin:30px;
+  color:#000;
 }
 
 /* HEADER */
 
 .header{
-text-align:center;
-margin-bottom:30px;
+  text-align:center;
+  margin-bottom:30px;
 }
 
 .header h1{
-margin:0;
-font-size:28px;
+  margin:0;
+  font-size:28px;
 }
 
 .date{
-font-size:12px;
-margin-top:5px;
+  font-size:12px;
+  margin-top:5px;
 }
 
 /* GROUP */
 
 .group{
-margin-top:40px;
+  margin-top:40px;
+  page-break-inside:avoid;
+  break-inside:avoid;
 }
 
 .groupTitle{
-font-size:20px;
-font-weight:700;
-border-bottom:2px solid #000;
-padding-bottom:5px;
+  font-size:20px;
+  font-weight:700;
+  border-bottom:2px solid #000;
+  padding-bottom:5px;
 }
 
 /* MASTER */
 
 .master{
-margin-top:20px;
-margin-left:10px;
+  margin-top:20px;
+  margin-left:10px;
+  page-break-inside:avoid;
+  break-inside:avoid;
 }
 
 .masterTitle{
-font-size:16px;
-font-weight:600;
-margin-bottom:5px;
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:5px;
 }
 
 /* TABLE */
 
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  page-break-inside:avoid;
+}
+
+tr{
+  page-break-inside:avoid;
+  page-break-after:auto;
+}
+
+th, td{
+  border:1px solid #000;
+  padding:6px;
+  font-size:12px;
+}
+
+th{
+  background:#f0f0f0;
+  text-align:left;
 }
 
 td{
   vertical-align:middle;
 }
+
+/* QR */
 
 td img{
   width:20mm;
@@ -76,17 +99,12 @@ td img{
   margin:auto;
 }
 
-th{
-background:#f0f0f0;
-text-align:left;
-}
-
 /* PRINT */
 
 @media print{
-body{
-margin:10mm;
-}
+  body{
+    margin:10mm;
+  }
 }
 
 </style>
